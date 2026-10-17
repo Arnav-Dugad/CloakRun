@@ -116,3 +116,38 @@ them. `versionCode` increases by one per release.
 On the development machine, JVM connections over IPv6 time out while curl succeeds. `org.gradle.jvmargs` sets
 `-Djava.net.preferIPv4Stack=true`. For the wrapper download, export
 `JAVA_TOOL_OPTIONS=-Djava.net.preferIPv4Stack=true`. This is harmless in CI.
+
+## D-016 Glass via Haze 2 with three quality tiers (2026-10-17)
+
+Haze 2.0.1 (`haze` and `haze-blur`) provides backdrop blur through RenderEffect on API 31+. `GlassSurface` wraps it
+and adds what Haze does not: the gradient rim along the exact shape, grain, a tilt specular and a tinted shadow.
+`GlassQuality` picks one of three tiers:
+
+- **Full:** API 31+ with a normal memory class.
+- **Reduced:** blur at 60 percent radius and no grain, for small memory classes.
+- **Tint:** no blur, with a denser frosted tint that keeps text contrast. This tier applies below API 31, on low-RAM
+  devices, and in Performance mode.
+
+Device tilt is read once in `CloakTheme` and shared through a composition local, and only in draw scope, so tilt
+never triggers recomposition.
+
+## D-017 Continuous corners by superellipse (2026-10-17)
+
+`SquircleShape` builds each corner from the superellipse |x|^n + |y|^n = 1 (n = 5), spread over 1.6 times the
+nominal radius. This makes it read at the same visual size as a circular corner but with curvature continuity. When
+the corner is clamped (pills), the exponent eases toward 2, so capsules have true semicircular ends. Tests rasterise
+the path and probe points inside and outside each corner.
+
+## D-018 Screenshot testing with Roborazzi on Robolectric (2026-10-17)
+
+Roborazzi 1.76 with Robolectric 4.17 native graphics renders every gallery section in the Night and Daylight themes
+at 411 x 1500 dp, xxhdpi (tall enough for the longest section). Goldens live in `feature/devtools/src/test/screenshots` and are verified in CI with a
+2 percent tolerance for anti-aliasing differences between operating systems. Robolectric on JDK 25 needs
+`java.base` internals opened, so the convention plugin adds the `--add-opens` and `--add-exports` flags to every
+Android test task. Screenshots render with reduced motion, so infinite animations stop and the clock can go idle.
+This also enforces that no component animates forever when motion is reduced.
+
+## D-019 Developer tools are a debug-only module (2026-10-17)
+
+`feature:devtools` holds the Design Gallery now, and Simulation Mode and the debug overlay in Phase 2. The app depends
+on it with `debugImplementation`, so its code, strings and launcher entry never reach release builds.

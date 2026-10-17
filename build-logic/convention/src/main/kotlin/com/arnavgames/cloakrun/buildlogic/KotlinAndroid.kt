@@ -73,7 +73,24 @@ internal fun Project.configureLibrary(extension: LibraryExtension) {
     configureKotlinAndroid()
 }
 
+/**
+ * Robolectric (screenshot and Compose UI tests) reaches into java.base internals that JDK 17+
+ * no longer exposes by default.
+ */
+internal fun Project.configureRobolectricJvm() {
+    tasks.withType(org.gradle.api.tasks.testing.Test::class.java).configureEach {
+        jvmArgs(
+            "--add-opens=java.base/java.io=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-exports=java.base/jdk.internal.access=ALL-UNNAMED",
+            "--add-opens=java.base/jdk.internal.access=ALL-UNNAMED",
+        )
+        maxHeapSize = "2g"
+    }
+}
+
 private fun Project.configureKotlinAndroid() {
+    configureRobolectricJvm()
     extensions.configure<KotlinAndroidProjectExtension> {
         compilerOptions {
             jvmTarget.set(JVM_TARGET)

@@ -18,6 +18,7 @@ env:
     spotlessCheck detekt
     lintDebug lintSideloadDebug
     testDebugUnitTest testSideloadDebugUnitTest
+    verifyRoborazziDebug
     assembleSideloadDebug
 
 jobs:

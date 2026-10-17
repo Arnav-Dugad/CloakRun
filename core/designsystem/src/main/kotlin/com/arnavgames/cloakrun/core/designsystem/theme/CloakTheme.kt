@@ -21,6 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
+import com.arnavgames.cloakrun.core.designsystem.glass.LocalGlassQuality
+import com.arnavgames.cloakrun.core.designsystem.glass.LocalTilt
+import com.arnavgames.cloakrun.core.designsystem.glass.rememberDeviceTilt
+import com.arnavgames.cloakrun.core.designsystem.glass.rememberGlassQuality
+import com.arnavgames.cloakrun.core.designsystem.haptics.LocalCloakHaptics
+import com.arnavgames.cloakrun.core.designsystem.haptics.rememberCloakHaptics
 import com.arnavgames.cloakrun.core.designsystem.token.CloakBlur
 import com.arnavgames.cloakrun.core.designsystem.token.CloakColors
 import com.arnavgames.cloakrun.core.designsystem.token.CloakMotion
@@ -47,11 +53,15 @@ enum class ThemePreference { System, Night, Amoled, Daylight }
  * @param preference the user's theme choice.
  * @param reduceMotion forces reduced motion on. When false the system "remove animations"
  *   setting still applies.
+ * @param performanceMode trades glass blur, grain and tilt highlights for frame rate and battery.
+ * @param hapticsEnabled the in-app haptics setting (the system setting is enforced by Android).
  */
 @Composable
 fun CloakTheme(
     preference: ThemePreference = ThemePreference.System,
     reduceMotion: Boolean = false,
+    performanceMode: Boolean = false,
+    hapticsEnabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val systemDark = isSystemInDarkTheme()
@@ -64,11 +74,17 @@ fun CloakTheme(
     val colors = CloakColors.forMode(mode)
     val systemReduced = rememberSystemAnimationsDisabled()
     val motion = remember(reduceMotion, systemReduced) { CloakMotion(reduced = reduceMotion || systemReduced) }
+    val glassQuality = rememberGlassQuality(performanceMode)
+    val tilt = rememberDeviceTilt(enabled = !motion.reduced && !performanceMode)
+    val haptics = rememberCloakHaptics(hapticsEnabled)
 
     CompositionLocalProvider(
         LocalCloakColors provides colors,
         LocalCloakTypography provides CloakTypography.Default,
         LocalCloakMotion provides motion,
+        LocalGlassQuality provides glassQuality,
+        LocalTilt provides tilt,
+        LocalCloakHaptics provides haptics,
     ) {
         MaterialTheme(
             colorScheme = colors.toMaterialScheme(),
@@ -107,6 +123,10 @@ object CloakTheme {
     val motion: CloakMotion
         @Composable @ReadOnlyComposable
         get() = LocalCloakMotion.current
+
+    val haptics: com.arnavgames.cloakrun.core.designsystem.haptics.CloakHaptics
+        @Composable @ReadOnlyComposable
+        get() = LocalCloakHaptics.current
 }
 
 /** Reads `ANIMATOR_DURATION_SCALE` and keeps observing it, so toggling the setting applies live. */

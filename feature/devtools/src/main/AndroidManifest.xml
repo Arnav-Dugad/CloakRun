@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Merged into debug builds only (the app depends on this module with debugImplementation). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity
+            android:name=".gallery.DesignGalleryActivity"
+            android:exported="true"
+            android:label="@string/gallery_launcher_label"
+            android:taskAffinity="com.arnavgames.cloakrun.gallery"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

@@ -47,3 +47,6 @@ pubsub-debug.log
 
 # Screenshot test outputs (goldens live in src/test/screenshots)
 **/build/outputs/roborazzi/
+
+# Browser automation output
+.playwright-mcp/

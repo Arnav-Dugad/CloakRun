@@ -93,6 +93,7 @@ if (file("google-services.json").exists()) {
 
 dependencies {
     implementation(projects.core.designsystem)
+    debugImplementation(projects.feature.devtools)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)

@@ -3,6 +3,9 @@
 naming:
   FunctionNaming:
     ignoreAnnotated: ['Composable']
+  # Compose files are named after their main composable, not after a supporting enum or state class.
+  MatchingDeclarationName:
+    active: false
   TopLevelPropertyNaming:
     constantPattern: '[A-Z][A-Za-z0-9_]*'
 
@@ -12,6 +15,11 @@ complexity:
     ignoreDefaultParameters: true
   LongMethod:
     ignoreAnnotated: ['Composable']
+  CyclomaticComplexMethod:
+    ignoreSimpleWhenEntries: true
+  # Small composables are the unit of reuse; counting them as "functions" penalises good structure.
+  TooManyFunctions:
+    ignoreAnnotatedFunctions: ['Composable', 'Preview']
 
 style:
   # Design tokens, colour science and geometry are numeric by nature; named constants are used
@@ -20,6 +28,9 @@ style:
     active: false
   MaxLineLength:
     maxLineLength: 140
+  ReturnCount:
+    max: 3
+    excludeGuardClauses: true
   UnusedPrivateFunction:
     ignoreAnnotated: ['Preview']
 
@@ -36,3 +47,7 @@ Compose:
       - LocalCloakSizes
       - LocalCloakBlur
       - LocalCloakMotion
+      - LocalGlassBackdrop
+      - LocalGlassQuality
+      - LocalTilt
+      - LocalCloakHaptics

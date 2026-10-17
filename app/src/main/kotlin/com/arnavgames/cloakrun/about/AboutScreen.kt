@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,7 +37,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arnavgames.cloakrun.R
 import com.arnavgames.cloakrun.core.designsystem.R as DesignR
+import com.arnavgames.cloakrun.core.designsystem.component.GlassCard
 import com.arnavgames.cloakrun.core.designsystem.component.NightBackdrop
+import com.arnavgames.cloakrun.core.designsystem.glass.GlassScene
+import com.arnavgames.cloakrun.core.designsystem.shape.SquircleShape
 import com.arnavgames.cloakrun.core.designsystem.theme.CloakTheme
 import com.arnavgames.cloakrun.core.designsystem.theme.ThemePreference
 
@@ -49,7 +51,7 @@ import com.arnavgames.cloakrun.core.designsystem.theme.ThemePreference
 @Composable
 fun AboutScreen(versionName: String, modifier: Modifier = Modifier) {
     val spacing = CloakTheme.spacing
-    NightBackdrop(modifier, focus = Offset(0.5f, 0.2f)) {
+    GlassScene(backdrop = { NightBackdrop(focus = Offset(0.5f, 0.2f)) }, modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .windowInsetsPadding(WindowInsets.safeDrawing)
@@ -141,37 +143,22 @@ private fun VersionPill(versionName: String) {
         style = CloakTheme.typography.caption.copy(fontFeatureSettings = "tnum"),
         color = colors.textSecondary,
         modifier = Modifier
-            .background(colors.glassTint, RoundedCornerShape(50))
-            .border(BorderStroke(1.dp, colors.outline), RoundedCornerShape(50))
+            .background(colors.glassTint, SquircleShape.Pill)
+            .border(BorderStroke(1.dp, colors.outline), SquircleShape.Pill)
             .padding(horizontal = 14.dp, vertical = 6.dp),
     )
 }
 
 @Composable
 private fun InfoCard(title: String, body: String) {
-    val colors = CloakTheme.colors
-    val shape = RoundedCornerShape(CloakTheme.radii.card)
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(colors.glassTint, shape)
-            .border(
-                BorderStroke(
-                    1.dp,
-                    Brush.linearGradient(listOf(colors.glassEdgeHighlight, colors.glassEdgeShade)),
-                ),
-                shape,
-            )
-            .padding(CloakTheme.spacing.xl),
-        verticalArrangement = Arrangement.spacedBy(CloakTheme.spacing.s),
-    ) {
+    GlassCard(Modifier.fillMaxWidth()) {
         Text(
             text = title,
             style = CloakTheme.typography.titleSmall,
-            color = colors.textPrimary,
+            color = CloakTheme.colors.textPrimary,
             modifier = Modifier.semantics { heading() },
         )
-        Text(text = body, style = CloakTheme.typography.bodySmall, color = colors.textSecondary)
+        Text(text = body, style = CloakTheme.typography.bodySmall, color = CloakTheme.colors.textSecondary)
     }
 }
 

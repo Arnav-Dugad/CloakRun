@@ -5,6 +5,31 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Design system (Phase 1).
+  - Frost Glass material: backdrop blur (Haze 2), an 8 to 16 percent tint, a 1dp gradient rim traced along the
+    shape, film grain, a tinted soft shadow and a specular sweep that follows device tilt. Glass quality adapts to
+    the device: full blur, reduced blur, or a dense frosted tint below Android 12, on low-RAM phones and in
+    Performance mode.
+  - Continuous-corner `SquircleShape` (superellipse, n = 5) that eases into a true capsule for pills.
+  - Components: buttons (primary, glass, ghost, danger) with squash and stretch and a highlight under the finger;
+    hold-to-confirm for destructive actions; chips; a liquid toggle; segmented tabs with a sliding glass indicator;
+    a slider; a glass text field; a rolling number ticker; split-flap join-code text; an in-match status pill; a
+    radar loader; empty and error states; a detented glass bottom sheet whose corners, blur and scrim follow the
+    drag; and procedural avatars.
+  - Haptic vocabulary (tick, confirm, ping, near, caught, power-up, countdown, heartbeat, error) built on
+    `VibrationEffect.Composition` primitives with fallbacks for older devices.
+- Custom icon set: 52 icons on a 24dp grid with a 2dp round stroke, including every icon in the brief. Directional
+  icons mirror in right-to-left layouts.
+- Design Gallery (debug builds only, "CloakRun Gallery" in the launcher) showing every token, component, icon,
+  avatar and haptic cue, with theme, reduced-motion and Performance-mode switches.
+- Screenshot tests (Roborazzi) for every gallery section in the Night and Daylight themes.
+
+### Changed
+
+- The About screen now uses real glass cards over the radar backdrop.
+
 ## [0.1.0] - 2026-10-17
 
 ### Added
