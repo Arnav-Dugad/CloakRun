@@ -5,6 +5,8 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-17
+
 ### Added
 
 - Park snap: in the play-area designer, choose Park and tap a park, campus green or garden. The area snaps to its
