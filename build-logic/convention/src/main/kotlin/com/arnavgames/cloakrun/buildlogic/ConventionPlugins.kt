@@ -24,6 +24,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         extensions.configure<LibraryExtension> { configureLibrary(this) }
         configureQuality()
         dependencies {
+            add("testImplementation", libs.lib("robolectric"))
             add("testImplementation", libs.lib("junit4"))
             add("testImplementation", libs.lib("truth"))
             add("testImplementation", libs.lib("kotlinx-coroutines-test"))

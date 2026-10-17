@@ -1,0 +1,89 @@
+package com.arnavgames.cloakrun.feature.playarea
+
+import com.arnavgames.cloakrun.core.game.area.PlayArea
+import com.arnavgames.cloakrun.core.game.area.PlayAreaCheck
+import com.arnavgames.cloakrun.core.game.area.PlayAreaRules
+import com.arnavgames.cloakrun.core.game.geo.GeoPoint
+
+enum class AreaShape { Circle, Polygon }
+
+/**
+ * The area being drawn. Pure state with pure transitions, so the editor's behaviour is unit
+ * tested without Android.
+ */
+data class PlayAreaDraft(
+    val shape: AreaShape = AreaShape.Circle,
+    val circleCenter: GeoPoint? = null,
+    val radiusM: Double = DEFAULT_RADIUS_M,
+    val vertices: List<GeoPoint> = emptyList(),
+) {
+    /** The drawn area, or null while there is not enough to form one. */
+    val area: PlayArea?
+        get() = when (shape) {
+            AreaShape.Circle -> circleCenter?.let { PlayArea.Circle(it, radiusM) }
+            AreaShape.Polygon -> if (vertices.size >= 3) PlayArea.Polygon(vertices) else null
+        }
+
+    fun check(rules: PlayAreaRules): PlayAreaCheck = area?.let(rules::validate)
+        ?: if (shape == AreaShape.Polygon) PlayAreaCheck.TooFewVertices else PlayAreaCheck.TooSmall
+
+    fun withShape(newShape: AreaShape): PlayAreaDraft = copy(shape = newShape)
+
+    /** A tap on the map: moves the circle centre, or appends a polygon corner (up to the limit). */
+    fun tap(point: GeoPoint, rules: PlayAreaRules): PlayAreaDraft = when (shape) {
+        AreaShape.Circle -> copy(circleCenter = point)
+        AreaShape.Polygon -> if (vertices.size < rules.maxVertices) copy(vertices = vertices + point) else this
+    }
+
+    fun withRadius(meters: Double, rules: PlayAreaRules): PlayAreaDraft =
+        copy(radiusM = meters.coerceIn(rules.minCircleRadiusM, rules.maxCircleRadiusM))
+
+    fun moveVertex(index: Int, to: GeoPoint): PlayAreaDraft =
+        if (index in vertices.indices) copy(vertices = vertices.toMutableList().also { it[index] = to }) else this
+
+    fun undo(): PlayAreaDraft = if (vertices.isNotEmpty()) copy(vertices = vertices.dropLast(1)) else this
+
+    fun clear(): PlayAreaDraft = when (shape) {
+        AreaShape.Circle -> copy(circleCenter = null)
+        AreaShape.Polygon -> copy(vertices = emptyList())
+    }
+
+    companion object {
+        const val DEFAULT_RADIUS_M = 400.0
+
+        fun from(area: PlayArea): PlayAreaDraft = when (area) {
+            is PlayArea.Circle -> PlayAreaDraft(AreaShape.Circle, area.center, area.radiusM)
+            is PlayArea.Polygon -> PlayAreaDraft(AreaShape.Polygon, vertices = area.vertices)
+        }
+    }
+}
+
+/** Compact, versioned text encoding for storing an area locally. */
+object PlayAreaCodec {
+    private const val VERSION = "v1"
+
+    fun encode(area: PlayArea): String = when (area) {
+        is PlayArea.Circle -> "$VERSION|circle|${area.center.lat},${area.center.lng},${area.radiusM}"
+        is PlayArea.Polygon -> "$VERSION|polygon|" + area.vertices.joinToString(";") { "${it.lat},${it.lng}" }
+    }
+
+    fun decode(text: String): PlayArea? = runCatching {
+        val parts = text.split("|")
+        require(parts.size == 3 && parts[0] == VERSION)
+        when (parts[1]) {
+            "circle" -> {
+                val (lat, lng, r) = parts[2].split(",").map(String::toDouble)
+                PlayArea.Circle(GeoPoint(lat, lng), r)
+            }
+
+            "polygon" -> PlayArea.Polygon(
+                parts[2].split(";").map { pair ->
+                    val (lat, lng) = pair.split(",").map(String::toDouble)
+                    GeoPoint(lat, lng)
+                },
+            )
+
+            else -> error("unknown shape")
+        }
+    }.getOrNull()
+}

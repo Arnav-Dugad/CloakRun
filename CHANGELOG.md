@@ -5,6 +5,42 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Map (Phase 2). Custom CloakRun Night and Day styles on OpenFreeMap vector tiles:
+  - near-black land, luminous violet and cyan roads with glow, softly lit parks and water
+  - emphasised footpaths
+  - 3D buildings that rise with zoom and brighten with height
+  The style switches automatically at local sunset and sunrise, with a crossfade between styles.
+- Cinematic fly-in to your position: the camera swoops down and tilts as the buildings rise.
+- Play-area designer:
+  - draw a circle (tap to place it, slider to size it) or a polygon (tap to add corners, drag to move them)
+  - a live area readout in square metres, hectares or square kilometres, with validation against size limits and
+    crossing edges
+  - an animated glowing energy-line border, with the outside world dimmed
+  - areas are saved on the device only
+- Location service:
+  - one shared, adaptive location stream that samples fast near opponents, slow when idle, and frugally on low
+    battery or battery saver
+  - mock-location flagging
+  - a match foreground service with a persistent notification and a Stop action
+  - an app-wide "Sharing your fuzzy zone" indicator
+- Local geofencing for play-area enter, exit and near-edge, with GPS-jitter hysteresis.
+- Home screen and Navigation 3 app shell with spring transitions and a predictive-back preview.
+- Simulation Mode (debug builds only):
+  - bots that walk the real street and path network of the visible map, drawn as seeker heading cones and hider
+    glass beads with name tags
+  - "Walk me" to simulate your own movement
+  - 1x, 4x and 10x speed
+  - a toggle for the match service
+  - a debug HUD with frame rate, fix accuracy, source and mock flag
+- Pure Kotlin game engine foundations: geodesy, play-area geometry, sunrise and sunset, a road graph, bot walkers and a
+  fast-forwardable game clock, all unit tested.
+
+### Fixed
+
+- The wordmark is now legible on light themes (single-colour variant).
+
 ## [0.2.0] - 2026-10-17
 
 ### Added

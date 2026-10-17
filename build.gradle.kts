@@ -39,6 +39,8 @@ val ktlintRules = mapOf(
         "LocalGlassQuality",
         "LocalTilt",
         "LocalCloakHaptics",
+        "LocalMapOverlayContributors",
+        "LocalTopChromeInset",
     ).joinToString(","),
 )
 

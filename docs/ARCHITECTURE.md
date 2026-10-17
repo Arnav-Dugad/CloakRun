@@ -45,10 +45,11 @@ build-logic ── Gradle convention plugins shared by every module
 | `core:designsystem` | Android library + Compose | Phase 0 (tokens), Phase 1 (glass, components, haptics): done |
 | `core:icons` | Android library + Compose | Phase 1: done |
 | `feature:devtools` | Android library, debug only | Phase 1 (Design Gallery): done |
-| `core:map`, `core:location` | Android library | Phase 2 |
-| `core:game` | JVM library | Phase 2 (geometry), Phase 4 (rules) |
+| `core:map`, `core:location` | Android library | Phase 2: done |
+| `core:game` | JVM library | Phase 2 (geometry, sun, simulation): done; Phase 4 (rules) |
 | `core:data` | Android library | Phase 3 |
-| `feature:*` | Android library + Compose | Phases 3 to 5 |
+| `feature:home`, `feature:playarea` | Android library + Compose | Phase 2: done |
+| other `feature:*` | Android library + Compose | Phases 3 to 5 |
 | `feature:update` | Android library, sideload flavour | Phase 7 |
 | `benchmark` | `com.android.test` | Phase 6 |
 

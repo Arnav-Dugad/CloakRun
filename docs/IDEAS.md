@@ -109,3 +109,62 @@ impact Low, Med or High. Ideas move to `CHANGELOG.md` when built.
     touch. (S, Med)
 29. **Night-vision palette.** A red-shifted UI for Night Run that preserves dark adaptation outdoors. (S, Med)
 30. **Seasonal launcher icons.** Swap the launcher icon through activity aliases for seasonal events. (S, Low)
+
+## Batch 2 (2026-10-17, after Phases 1 and 2)
+
+### UI
+31. **Corner loupe.** While you drag a polygon corner, a glass magnifier shows the street under your finger. (S, High)
+32. **Contextual thumb action.** The primary action morphs to what matters now; for example Tag appears only when a
+    hider's Bluetooth ID is in range. (M, High)
+33. **Spoken glance.** One long-press reads your status aloud (role, time left, zone distance) for pocket play. (M, Med)
+
+### Map
+34. **Walkability shading.** Streets are shaded by pedestrian friendliness (footways, low-traffic roads) to guide the
+    host's area design. (M, High)
+35. **Private-land exclusion.** OpenStreetMap areas tagged `access=private` or `access=no` are hatched, excluded from
+    cache spawns and warned about. (M, High)
+36. **Lit-street overlay.** At night, streets tagged `lit=yes` glow brighter, and unlit ones are flagged as less safe.
+    (M, High)
+37. **Area thumbnails.** A snapshot of each saved area becomes its glass card thumbnail in lobby lists. (S, Med)
+
+### Animation
+38. **Energy-line ignition.** When an area becomes valid, its border ignites from one point and races around the
+    loop. (S, Med)
+39. **Glowing footsteps.** Moving players leave a short trail of fading footstep dots. (S, Low)
+40. **Validity breath.** The tool sheet breathes once when the area flips between valid and invalid. (S, Low)
+
+### Gameplay
+41. **Park snap.** Tap inside a park and the play area snaps to that park's real boundary polygon. (M, High)
+42. **Hider base.** The host places a base where hiders start, and the head-start distance is enforced. (S, Med)
+43. **Size coach.** Recommends a play-area size from the lobby size and mode. (S, High)
+
+### Backend
+44. **Area codes.** Encode a play area as a short base32 code to share it outside a lobby. (S, Med)
+45. **Tile budget.** Count tile fetches per session, respect OpenFreeMap's bulk limits, and switch to a fallback style
+    host from Remote Config. (S, High)
+46. **Write coalescing.** Merge bursts of lobby edits (ready, role, settings) into one Firestore write per 500 ms.
+    (S, Med)
+
+### Security and anti-cheat
+47. **Simulated-fix rejection.** The release match engine rejects any fix whose source is Simulated, as defence in
+    depth. (S, High)
+48. **Route plausibility.** Compare a trail with the walkable graph; long straight runs through buildings flag
+    teleporting or spoofing. (M, High)
+49. **Tracking-loss signal.** If an OEM battery killer stops the match service, the player shows as "signal lost"
+    instead of silently vanishing. (S, High)
+
+### Performance
+50. **Projected-path cache.** Re-project overlay geometry only when the camera moves, not on every frame. (S, Med)
+51. **Map pixel ratio.** Performance mode renders the map at 0.75x pixel density. (S, Med)
+52. **Style prewarm.** Fetch both styles' glyph ranges at start so day and night crossfades are instant. (S, Low)
+
+### Social and retention
+53. **Favourite places.** Save several named play areas, such as "Cubbon Park loop". (S, High)
+54. **Area ratings.** After a match, players rate the area for fun and safety, shared with their crew. (M, Med)
+55. **Scout routes.** The host's scouting walk is saved as a suggested route for new players. (M, Low)
+
+### Polish
+56. **Glass attribution.** The map attribution becomes a glass chip that matches the interface, and stays visible.
+    (S, Low)
+57. **Limit haptics.** A soft tick when a drag crosses the minimum or maximum area. (S, Med)
+58. **Sky gradient.** Above the tilted horizon, a subtle sky follows the real sun altitude. (M, Med)

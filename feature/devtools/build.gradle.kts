@@ -13,6 +13,8 @@ android {
 
 dependencies {
     implementation(projects.core.designsystem)
+    implementation(projects.core.map)
+    implementation(projects.core.location)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
 }
