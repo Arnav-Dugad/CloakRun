@@ -42,9 +42,9 @@ build-logic ── Gradle convention plugins shared by every module
 | --- | --- | --- |
 | `build-logic` | Gradle included build | Phase 0 |
 | `app` | Android application | Phase 0 |
-| `core:designsystem` | Android library + Compose | Phase 0 (tokens), Phase 1 (components) |
-| `core:icons` | Android library + Compose | Phase 1 |
-| `feature:devtools` | Android library, debug only | Phase 1 |
+| `core:designsystem` | Android library + Compose | Phase 0 (tokens), Phase 1 (glass, components, haptics): done |
+| `core:icons` | Android library + Compose | Phase 1: done |
+| `feature:devtools` | Android library, debug only | Phase 1 (Design Gallery): done |
 | `core:map`, `core:location` | Android library | Phase 2 |
 | `core:game` | JVM library | Phase 2 (geometry), Phase 4 (rules) |
 | `core:data` | Android library | Phase 3 |

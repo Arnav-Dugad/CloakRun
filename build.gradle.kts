@@ -35,6 +35,10 @@ val ktlintRules = mapOf(
         "LocalCloakSizes",
         "LocalCloakBlur",
         "LocalCloakMotion",
+        "LocalGlassBackdrop",
+        "LocalGlassQuality",
+        "LocalTilt",
+        "LocalCloakHaptics",
     ).joinToString(","),
 )
 
