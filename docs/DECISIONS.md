@@ -199,3 +199,32 @@ Config.
 
 The lockup's luminous wordmark is designed for dark grounds and nearly vanishes on Daylight. Light themes render it
 as the single-colour ink variant (a tint, not a redraw). This was caught by the Home screenshot test.
+
+## D-027 In-app updater (2026-10-17)
+
+The sideload flavour updates itself from GitHub Releases. The play flavour has no updater and no
+`REQUEST_INSTALL_PACKAGES`.
+
+- **Check:** at launch, at most every 6 hours, through the unauthenticated GitHub API (60 requests per hour per IP is
+  plenty). Drafts, pre-releases and releases without `CloakRun-vX.Y.Z.apk` are ignored.
+- **Download:** `DownloadManager` into app-specific storage, so it resumes across process death and needs no storage
+  permission. Progress is polled every 250 ms. When "Download updates on Wi-Fi automatically" is on (the default),
+  downloads start by themselves on unmetered networks.
+- **Verify:**
+  - The SHA-256 must match the published `SHA256SUMS.txt` and GitHub's own asset digest, whichever are available,
+    and at least one must be.
+  - The APK must have the same package name as the installed app and be signed only by certificates the installed
+    app trusts.
+  - Failures delete the file and never install.
+- **Install:** a `PackageInstaller` session rather than handing a FileProvider URI to the installer activity, which is
+  what the brief described.
+  - Sessions report staging progress and use the system confirmation.
+  - Once CloakRun is the installer of record, Android 12+ can skip the prompt (`USER_ACTION_NOT_REQUIRED`). This was
+    verified on the emulator: after one in-app update, the installer of record is `com.arnavgames.cloakrun`.
+- **Debug builds** never update from GitHub: they use the `.debug` package and the debug key.
+
+## D-028 Release notes extraction (2026-10-17)
+
+The release workflow extracted the changelog section with an awk regular expression whose escapes were lost, so
+v0.1.0 to v0.3.0 shipped notes without their changelog. It now matches the heading as a literal string, and the three
+existing releases were re-published with full notes. The updater shows these notes in its sheet.

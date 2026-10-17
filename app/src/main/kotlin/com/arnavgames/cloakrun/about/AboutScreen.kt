@@ -50,7 +50,11 @@ import com.arnavgames.cloakrun.core.designsystem.theme.ThemePreference
  * In v0.1.0 it is also the launch destination.
  */
 @Composable
-fun AboutScreen(versionName: String, modifier: Modifier = Modifier) {
+fun AboutScreen(
+    versionName: String,
+    modifier: Modifier = Modifier,
+    updatesCard: @Composable () -> Unit = {},
+) {
     val spacing = CloakTheme.spacing
     GlassScene(backdrop = { NightBackdrop(focus = Offset(0.5f, 0.2f)) }, modifier = modifier.fillMaxSize()) {
         Column(
@@ -76,10 +80,7 @@ fun AboutScreen(versionName: String, modifier: Modifier = Modifier) {
                 title = stringResource(R.string.about_promise_title),
                 body = stringResource(R.string.about_promise_body),
             )
-            InfoCard(
-                title = stringResource(R.string.about_build_title),
-                body = stringResource(R.string.about_build_body),
-            )
+            updatesCard()
             InfoCard(
                 title = stringResource(R.string.about_notices_title),
                 body = stringResource(R.string.about_notices_body),

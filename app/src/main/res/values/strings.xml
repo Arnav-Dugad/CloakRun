@@ -6,8 +6,6 @@
     <string name="version_label">Version %1$s</string>
     <string name="about_promise_title">Your position stays yours</string>
     <string name="about_promise_body">Your exact location never leaves your phone. Other players only ever see a fuzzy zone that shrinks over time.</string>
-    <string name="about_build_title">This build</string>
-    <string name="about_build_body">The CloakRun foundation: brand, Frost Glass design tokens and the release pipeline. Gameplay arrives in the next releases, so check back on the Releases page.</string>
     <string name="about_notices_title">Open-source notices</string>
     <string name="about_notices_body">Sora and Inter typefaces, licensed under the SIL Open Font License 1.1.</string>
     <string name="about_copyright">Copyright 2026 Arnav Games. All rights reserved.</string>
