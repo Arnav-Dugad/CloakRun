@@ -1,0 +1,12 @@
+{
+  "name": "cloakrun-brand",
+  "private": true,
+  "type": "module",
+  "description": "Renders CloakRun raster brand assets from branding/*.svg",
+  "scripts": {
+    "render": "node render.mjs"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2"
+  }
+}

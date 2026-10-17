@@ -1,0 +1,19 @@
+{
+  "name": "cloakrun-rules-tests",
+  "private": true,
+  "type": "module",
+  "description": "Security Rules tests for CloakRun (Firestore and Realtime Database) against the Firebase Emulator Suite",
+  "engines": {
+    "node": ">=24.12.0"
+  },
+  "scripts": {
+    "test": "firebase emulators:exec --project demo-cloakrun --only firestore,database --config ../../firebase.json \"mocha --exit\"",
+    "test:watch": "mocha --watch"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "6.0.0",
+    "firebase": "13.0.0",
+    "firebase-tools": "15.34.0",
+    "mocha": "12.0.3"
+  }
+}

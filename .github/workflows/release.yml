@@ -1,0 +1,107 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build, sign and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Verify the tag matches version.properties
+        id: version
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          name="$(sed -n 's/^VERSION_NAME=//p' version.properties | tr -d '\r')"
+          if [ "v$name" != "$tag" ]; then
+            echo "::error::Tag $tag does not match VERSION_NAME $name"
+            exit 1
+          fi
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Decode signing key and Firebase config
+        env:
+          KEYSTORE_B64: ${{ secrets.CLOAKRUN_KEYSTORE_B64 }}
+          GOOGLE_SERVICES_JSON_B64: ${{ secrets.GOOGLE_SERVICES_JSON_B64 }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ]; then
+            echo "::error::CLOAKRUN_KEYSTORE_B64 secret is missing; refusing to publish an unsigned release."
+            exit 1
+          fi
+          echo "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/release.jks"
+          echo "CLOAKRUN_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+          if [ -n "$GOOGLE_SERVICES_JSON_B64" ]; then
+            echo "$GOOGLE_SERVICES_JSON_B64" | base64 --decode > app/google-services.json
+          fi
+
+      - name: Build signed APK (sideload) and AAB (play)
+        env:
+          CLOAKRUN_KEYSTORE_PASSWORD: ${{ secrets.CLOAKRUN_KEYSTORE_PASSWORD }}
+          CLOAKRUN_KEY_ALIAS: ${{ secrets.CLOAKRUN_KEY_ALIAS }}
+          CLOAKRUN_KEY_PASSWORD: ${{ secrets.CLOAKRUN_KEY_PASSWORD }}
+        run: ./gradlew assembleSideloadRelease bundlePlayRelease
+
+      - name: Collect artifacts and checksums
+        id: dist
+        run: |
+          v="v${{ steps.version.outputs.name }}"
+          mkdir dist
+          cp app/build/outputs/apk/sideload/release/app-sideload-release.apk "dist/CloakRun-$v.apk"
+          cp app/build/outputs/bundle/playRelease/app-play-release.aab "dist/CloakRun-$v.aab"
+          # Fail if the APK is not signed with the release certificate.
+          "$ANDROID_HOME"/build-tools/*/apksigner verify --print-certs "dist/CloakRun-$v.apk" | grep -q "CN=Arnav Games"
+          (cd dist && sha256sum "CloakRun-$v.apk" "CloakRun-$v.aab" > "CloakRun-$v-SHA256SUMS.txt")
+          cat dist/*SHA256SUMS.txt
+
+      - name: Release notes
+        run: |
+          v="${{ steps.version.outputs.name }}"
+          prev="$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
+          {
+            awk -v ver="$v" '
+              $0 ~ "^## \[" ver "\]" { flag = 1; next }
+              /^## \[/ { flag = 0 }
+              flag
+            ' CHANGELOG.md
+            echo
+            echo "### Commits"
+            if [ -n "$prev" ]; then range="$prev..$GITHUB_REF_NAME"; else range="$GITHUB_REF_NAME"; fi
+            git log "$range" --no-merges --pretty='- %s (%h)' | grep -v 'chore(release)' || true
+            echo
+            echo "### Verify your download"
+            echo
+            echo '```'
+            cat dist/*SHA256SUMS.txt
+            echo '```'
+            echo
+            echo "Made by Arnav Games."
+          } > release-notes.md
+          cat release-notes.md
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          name: CloakRun ${{ github.ref_name }}
+          body_path: release-notes.md
+          files: dist/*
+          fail_on_unmatched_files: true
+          make_latest: true
