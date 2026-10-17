@@ -5,6 +5,8 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-17
+
 ### Added
 
 - Foundation (Phase 0). A multi-module Gradle build with convention plugins (AGP 9.4, Kotlin 2.4, Compose, Hilt),
