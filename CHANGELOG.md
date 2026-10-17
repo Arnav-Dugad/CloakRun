@@ -5,6 +5,8 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-17
+
 ### Added
 
 - Design system (Phase 1).
