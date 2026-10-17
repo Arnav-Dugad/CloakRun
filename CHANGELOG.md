@@ -5,6 +5,24 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Park snap: in the play-area designer, choose Park and tap a park, campus green or garden. The area snaps to its
+  real edge, stops at main roads, rail and water, and stays editable by dragging corners.
+- Safety cutouts. Main roads, railways, water, buildings and restricted land (industrial, military, quarries, rail
+  yards, school grounds) inside the area become hatched no-go zones:
+  - a summary shows what was excluded and how much of the area it covers
+  - an area that is more than 40 percent off limits cannot be saved
+  - "Check safety" frames the whole area first, so nothing is missed
+- Route plausibility (anti-cheat foundation): an on-device integrity score that flags mock locations, teleports,
+  impossible speeds, long stretches away from streets, and straight runs through buildings. Flagged, never banned.
+- Simulation Mode shows the live integrity score and adds a Spoof jump to demonstrate detection.
+
+### Changed
+
+- The designer's tool panel collapses to a one-line readout (automatically after a park snap), so the map stays
+  visible.
+
 ## [0.4.0] - 2026-10-17
 
 ### Added

@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.drawText
@@ -44,14 +45,22 @@ import com.arnavgames.cloakrun.core.designsystem.shape.SquircleShape
 import com.arnavgames.cloakrun.core.designsystem.theme.CloakTheme
 import com.arnavgames.cloakrun.core.designsystem.theme.LocalTopChromeInset
 import com.arnavgames.cloakrun.core.game.area.PlayArea
+import com.arnavgames.cloakrun.core.game.geo.GeoPoint
+import com.arnavgames.cloakrun.core.game.integrity.IntegrityReport
+import com.arnavgames.cloakrun.core.game.integrity.RoutePlausibility
 import com.arnavgames.cloakrun.core.game.location.FixSource
+import com.arnavgames.cloakrun.core.game.location.LocationFix
+import com.arnavgames.cloakrun.core.game.safety.Hazard
+import com.arnavgames.cloakrun.core.game.safety.HazardKind
 import com.arnavgames.cloakrun.core.location.LocationRepository
 import com.arnavgames.cloakrun.core.location.TrackingController
 import com.arnavgames.cloakrun.core.map.CloakMapState
 import com.arnavgames.cloakrun.core.map.MapOverlayContributor
 import com.arnavgames.cloakrun.feature.devtools.R
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 /** Debug-only map layer: simulated bots, the Simulation panel and the debug HUD. */
 class SimulationOverlay(private val repository: LocationRepository, private val tracking: TrackingController) : MapOverlayContributor {
@@ -61,6 +70,7 @@ class SimulationOverlay(private val repository: LocationRepository, private val 
     @Composable
     override fun Overlay(state: CloakMapState, playArea: PlayArea?) {
         val fps = rememberFps()
+        val integrity = rememberIntegrity(state)
         LaunchedEffect(engine) {
             var last = 0L
             while (isActive) {
@@ -83,7 +93,7 @@ class SimulationOverlay(private val repository: LocationRepository, private val 
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                DebugHud(fps, engine.bots.size)
+                DebugHud(fps, engine.bots.size, integrity)
                 SimulationPanel(
                     engine = engine,
                     onSpawn = { engine.spawn(state.visibleWalkableLines(widthPx, heightPx), playArea) },
@@ -93,7 +103,11 @@ class SimulationOverlay(private val repository: LocationRepository, private val 
     }
 
     @Composable
-    private fun DebugHud(fps: Int, bots: Int) {
+    private fun DebugHud(
+        fps: Int,
+        bots: Int,
+        integrity: IntegrityReport,
+    ) {
         val fix by repository.lastFix.collectAsStateWithLifecycle()
         val fixText = fix?.let { "%.0fm".format(it.accuracyM) } ?: stringResource(R.string.sim_hud_no_fix)
         val source = when {
@@ -104,7 +118,8 @@ class SimulationOverlay(private val repository: LocationRepository, private val 
         }
         GlassSurface(shape = SquircleShape.Pill, style = GlassDefaults.chrome(), elevated = false) {
             Text(
-                stringResource(R.string.sim_hud, fps, fixText, source, bots),
+                stringResource(R.string.sim_hud, fps, fixText, source, bots) + "   " +
+                    stringResource(R.string.sim_integrity, integrity.score, integrity.verdict.name),
                 style = CloakTheme.typography.caption.copy(fontFeatureSettings = "tnum"),
                 color = CloakTheme.colors.textSecondary,
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
@@ -173,10 +188,56 @@ class SimulationOverlay(private val repository: LocationRepository, private val 
                             contentDescription = stringResource(R.string.sim_tracking),
                         )
                     }
+                    CloakButton(
+                        stringResource(R.string.sim_spoof),
+                        onClick = engine::teleportMe,
+                        style = CloakButtonStyle.Danger,
+                        enabled = engine.walkingMe,
+                    )
                     CloakButton(stringResource(R.string.sim_clear), onClick = engine::clear, style = CloakButtonStyle.Ghost)
                 }
             }
         }
+    }
+
+    /**
+     * Live route plausibility for your own trail (last ten minutes), against the bots' street graph
+     * and the buildings on screen. Recomputed every two seconds.
+     */
+    @Composable
+    private fun rememberIntegrity(state: CloakMapState): IntegrityReport {
+        var report by remember { mutableStateOf(IntegrityReport.Clean) }
+        val windowInfo = LocalWindowInfo.current
+        LaunchedEffect(engine) {
+            val trail = ArrayDeque<LocationFix>()
+            launch {
+                repository.lastFix.collect { fix ->
+                    if (fix == null || trail.lastOrNull()?.timeMillis == fix.timeMillis) return@collect
+                    trail.addLast(fix)
+                    while (trail.size > 1 && fix.timeMillis - trail.first().timeMillis > TRAIL_WINDOW_MS) trail.removeFirst()
+                }
+            }
+            var buildings: List<List<GeoPoint>> = emptyList()
+            var buildingsAt = 0L
+            while (isActive) {
+                delay(INTEGRITY_INTERVAL_MS)
+                // Only judge a trail while the simulated "me" walks; the real device trail is judged in matches.
+                val origin = trail.firstOrNull()?.point
+                if (engine.walkingMe && origin != null) {
+                    val now = System.currentTimeMillis()
+                    if (now - buildingsAt > BUILDINGS_REFRESH_MS) {
+                        val size = windowInfo.containerSize
+                        buildings = state.visibleHazards(size.width.toFloat(), size.height.toFloat())
+                            .filterIsInstance<Hazard.Area>()
+                            .filter { it.kind == HazardKind.Building }
+                            .map { it.ring }
+                        buildingsAt = now
+                    }
+                    report = RoutePlausibility(engine.graph, buildings, origin).evaluate(trail.toList())
+                }
+            }
+        }
+        return report
     }
 }
 
@@ -264,3 +325,7 @@ private fun rememberFps(): Int {
     }
     return fps
 }
+
+private const val TRAIL_WINDOW_MS = 10 * 60 * 1000L
+private const val INTEGRITY_INTERVAL_MS = 2_000L
+private const val BUILDINGS_REFRESH_MS = 30_000L

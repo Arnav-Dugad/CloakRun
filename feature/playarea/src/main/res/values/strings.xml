@@ -4,6 +4,26 @@
     <string name="playarea_back">Back</string>
     <string name="playarea_shape_circle">Circle</string>
     <string name="playarea_shape_polygon">Polygon</string>
+    <string name="playarea_shape_park">Park</string>
+    <string name="playarea_expand">Show tools</string>
+    <string name="playarea_collapse">Hide tools</string>
+    <string name="playarea_hint_park">Tap inside a park, campus green or garden to snap to its edge.</string>
+    <string name="playarea_snapped">Snapped to the park edge. Drag a corner to adjust.</string>
+    <string name="playarea_snapped_cut">Snapped to the park, stopping at a main road, railway or water.</string>
+    <string name="playarea_not_park">No park or green space there. Try tapping on the green.</string>
+    <string name="playarea_park_small">That green space is smaller than the minimum play area.</string>
+    <string name="playarea_safety_title">Safety cutouts</string>
+    <string name="playarea_safety_none">No roads, water or restricted land inside. Buildings are always off limits.</string>
+    <string name="playarea_safety_counts">%1$s excluded, %2$d%% of the area.</string>
+    <string name="playarea_safety_unsafe">Over 40%% of this area is off limits. Pick a park or campus instead.</string>
+    <string name="playarea_safety_partial">Part of the area is off screen. Check it to include every cutout.</string>
+    <string name="playarea_safety_check">Check safety</string>
+    <string name="playarea_safety_hint">Hatched zones are no-go. Players are warned if they enter them.</string>
+    <plurals name="playarea_hazard_roads"><item quantity="one">%d main road</item><item quantity="other">%d main roads</item></plurals>
+    <plurals name="playarea_hazard_water"><item quantity="one">%d water body</item><item quantity="other">%d water bodies</item></plurals>
+    <plurals name="playarea_hazard_rail"><item quantity="one">%d railway</item><item quantity="other">%d railways</item></plurals>
+    <plurals name="playarea_hazard_restricted"><item quantity="one">%d restricted site</item><item quantity="other">%d restricted sites</item></plurals>
+    <plurals name="playarea_hazard_buildings"><item quantity="one">%d building</item><item quantity="other">%d buildings</item></plurals>
     <string name="playarea_hint_circle">Tap the map to move the centre. Drag the slider to resize.</string>
     <string name="playarea_hint_polygon">Tap the map to add corners. Drag a corner to move it.</string>
     <string name="playarea_radius">Radius</string>

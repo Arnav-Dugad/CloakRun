@@ -5,7 +5,15 @@ import com.arnavgames.cloakrun.core.game.area.PlayAreaCheck
 import com.arnavgames.cloakrun.core.game.area.PlayAreaRules
 import com.arnavgames.cloakrun.core.game.geo.GeoPoint
 
-enum class AreaShape { Circle, Polygon }
+/** How the area is drawn. Park snaps to a real green space and then edits like a polygon. */
+enum class AreaShape {
+    Circle,
+    Polygon,
+    Park,
+    ;
+
+    val usesVertices: Boolean get() = this != Circle
+}
 
 /**
  * The area being drawn. Pure state with pure transitions, so the editor's behaviour is unit
@@ -21,18 +29,22 @@ data class PlayAreaDraft(
     val area: PlayArea?
         get() = when (shape) {
             AreaShape.Circle -> circleCenter?.let { PlayArea.Circle(it, radiusM) }
-            AreaShape.Polygon -> if (vertices.size >= 3) PlayArea.Polygon(vertices) else null
+            AreaShape.Polygon, AreaShape.Park -> if (vertices.size >= 3) PlayArea.Polygon(vertices) else null
         }
 
     fun check(rules: PlayAreaRules): PlayAreaCheck = area?.let(rules::validate)
-        ?: if (shape == AreaShape.Polygon) PlayAreaCheck.TooFewVertices else PlayAreaCheck.TooSmall
+        ?: if (shape.usesVertices) PlayAreaCheck.TooFewVertices else PlayAreaCheck.TooSmall
 
     fun withShape(newShape: AreaShape): PlayAreaDraft = copy(shape = newShape)
 
     /** A tap on the map: moves the circle centre, or appends a polygon corner (up to the limit). */
     fun tap(point: GeoPoint, rules: PlayAreaRules): PlayAreaDraft = when (shape) {
         AreaShape.Circle -> copy(circleCenter = point)
+
         AreaShape.Polygon -> if (vertices.size < rules.maxVertices) copy(vertices = vertices + point) else this
+
+        // Park taps are resolved against the map by the screen; see [withSnapped].
+        AreaShape.Park -> this
     }
 
     fun withRadius(meters: Double, rules: PlayAreaRules): PlayAreaDraft =
@@ -45,8 +57,11 @@ data class PlayAreaDraft(
 
     fun clear(): PlayAreaDraft = when (shape) {
         AreaShape.Circle -> copy(circleCenter = null)
-        AreaShape.Polygon -> copy(vertices = emptyList())
+        AreaShape.Polygon, AreaShape.Park -> copy(vertices = emptyList())
     }
+
+    /** Replaces the corners with a snapped park outline. */
+    fun withSnapped(outline: List<GeoPoint>): PlayAreaDraft = copy(shape = AreaShape.Park, vertices = outline)
 
     companion object {
         const val DEFAULT_RADIUS_M = 400.0
