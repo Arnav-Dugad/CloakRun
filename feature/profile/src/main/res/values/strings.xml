@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_title">Profile</string>
+    <string name="profile_back">Back</string>
+    <string name="profile_avatar_cd">Your avatar</string>
+    <string name="profile_shuffle">Shuffle avatar</string>
+    <string name="profile_name">Your name</string>
+    <string name="profile_name_hint">2 to 20 characters</string>
+    <string name="profile_name_invalid">Use 2 to 20 letters, numbers, spaces, dots, dashes or underscores.</string>
+    <string name="profile_save">Save</string>
+    <string name="profile_saved">Profile saved</string>
+
+    <string name="profile_account">Account</string>
+    <string name="profile_guest">Guest account</string>
+    <string name="profile_guest_body">Your profile lives on this phone. Link a Google account to keep it if you change phones.</string>
+    <string name="profile_google">Linked to Google</string>
+    <string name="profile_google_email">Linked to %1$s</string>
+    <string name="profile_link">Link Google account</string>
+    <string name="profile_linked">Google account linked</string>
+    <string name="profile_link_cancelled">Linking cancelled</string>
+    <string name="profile_no_google">Add a Google account to this phone first, then try again.</string>
+    <string name="profile_link_failed">Could not link the account. Try again.</string>
+    <string name="profile_switch_title">That Google account already has a profile</string>
+    <string name="profile_switch_body">Switch to it? Your current guest profile on this phone will be replaced by that account\'s profile.</string>
+    <string name="profile_switch_confirm">Switch account</string>
+    <string name="profile_switched">Switched accounts</string>
+    <string name="profile_offline_build">Online accounts are not set up in this build.</string>
+
+    <string name="profile_privacy">Privacy</string>
+    <string name="profile_diagnostics">Share crash reports and anonymous usage statistics</string>
+    <string name="profile_diagnostics_body">Never includes your location.</string>
+
+    <string name="profile_delete_title">Delete my account and data</string>
+    <string name="profile_delete_body">Leaves any lobby you are in, deletes your profile and your account, and removes it from this phone. This cannot be undone.</string>
+    <string name="profile_delete_confirm">Hold to delete everything</string>
+    <string name="profile_delete_failed">Could not delete your account. Check your connection and try again.</string>
+</resources>

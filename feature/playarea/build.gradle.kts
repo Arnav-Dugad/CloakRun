@@ -9,6 +9,6 @@ android {
 dependencies {
     implementation(projects.core.map)
     implementation(projects.core.location)
-    implementation(libs.androidx.datastore.preferences)
+    implementation(projects.core.data)
     implementation(libs.androidx.activity.compose)
 }

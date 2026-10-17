@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="onboarding_progress">Step %1$d of %2$d</string>
+
+    <string name="onboarding_age_title">How old are you?</string>
+    <string name="onboarding_age_body">CloakRun is played outdoors with real people. We ask so we can keep it suitable for you. Only the age range is kept, on this phone.</string>
+    <string name="onboarding_age_under13">Under 13</string>
+    <string name="onboarding_age_teen">13 to 17</string>
+    <string name="onboarding_age_adult">18 or older</string>
+
+    <string name="onboarding_blocked_title">CloakRun is for players aged 13 and over</string>
+    <string name="onboarding_blocked_body">Thanks for wanting to play. This game uses live location outdoors, so it is only available from age 13.</string>
+
+    <string name="onboarding_rules_title">Stay safe</string>
+    <string name="onboarding_rules_body">These rules apply to every match. The game will remind you, but you are in charge of your own safety.</string>
+    <string name="onboarding_rule_trespass">Never trespass. Stay in public places, and respect fences and signs.</string>
+    <string name="onboarding_rule_roads">Stay off roads, rail lines and water. Never cross traffic to escape.</string>
+    <string name="onboarding_rule_groups">Play in groups, and avoid isolated or unlit places.</string>
+    <string name="onboarding_rule_daytime">Daytime is best. Tell someone where you are playing.</string>
+    <string name="onboarding_rule_stop">If anything feels unsafe, stop. The SOS button ends the match for everyone.</string>
+    <string name="onboarding_teen_note">Under 18: play with a parent or guardian\'s permission, and with an adult nearby.</string>
+    <string name="onboarding_rules_accept">I will play safe</string>
+
+    <string name="onboarding_consent_title">Who sees what</string>
+    <string name="onboarding_consent_exact">Your exact location never leaves your phone.</string>
+    <string name="onboarding_consent_zone">During a match, other players see a fuzzy zone around you, never a dot. It shrinks as the match goes on.</string>
+    <string name="onboarding_consent_when">Location is used only during a match you joined, with a notification showing the whole time.</string>
+    <string name="onboarding_consent_name">Your name and avatar are visible to players in your lobby.</string>
+    <string name="onboarding_consent_cleanup">Match data is deleted when the match ends. You can delete your account and data at any time in your profile.</string>
+    <string name="onboarding_consent_diagnostics">Share crash reports and anonymous usage statistics</string>
+    <string name="onboarding_consent_diagnostics_body">Helps fix bugs. Never includes your location. You can change this later.</string>
+    <string name="onboarding_consent_accept">Agree and continue</string>
+
+    <string name="onboarding_profile_title">Pick your look</string>
+    <string name="onboarding_profile_body">This is how other players see you. No real photos, no real names needed.</string>
+    <string name="onboarding_profile_shuffle">Shuffle avatar</string>
+    <string name="onboarding_profile_name">Your name</string>
+    <string name="onboarding_profile_suggest">Suggest a name</string>
+    <string name="onboarding_profile_finish">Start playing</string>
+    <string name="onboarding_profile_avatar_cd">Your avatar</string>
+    <string name="onboarding_name_too_short">Use at least 2 characters.</string>
+    <string name="onboarding_name_too_long">Use 20 characters or fewer.</string>
+    <string name="onboarding_name_bad">Use letters, numbers, spaces, dots, dashes or underscores.</string>
+    <string name="onboarding_name_hint">2 to 20 characters</string>
+</resources>

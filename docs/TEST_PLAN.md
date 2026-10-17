@@ -83,3 +83,21 @@ You need v0.4.0 installed from the Releases page. The next release will exercise
 5. Drag the map so only half the area is visible. The panel offers **Check safety**. Tap it: the map frames the
    whole area from above and the summary updates.
 6. Tap somewhere that is not green in Park mode. The message is "No park or green space there".
+
+## v0.6.0 lobbies (two phones)
+
+1. Fresh install: the age gate shows three equal choices. Pick 13 to 17 and check that the supervision note appears
+   on the rules step. Accept the rules and the consent. Leave diagnostics off.
+2. Profile step: the name is prefilled. Shuffle the avatar and start playing.
+3. Phone A: Host a lobby. With no saved area, the screen offers to design one. Save an area and come back.
+4. Phone A: Open lobby. The code orb shows six split-flap tiles. Open QR code: the QR shows on a light tile.
+5. Phone B: Join with a code. Type it in lowercase with a dash. The tiles fill and Join enables. Join.
+6. Phone A gets a haptic ping and "X joined"; Phone B appears in the orbit and the list.
+7. Phone B: I'm ready. Phone A: Shuffle. Roles appear, and Start briefing enables.
+8. Start briefing. Both phones reveal their role. Both confirm. The host sees "2 of 2 players briefed".
+9. Host: Back to lobby. Readiness resets.
+10. Host: remove Phone B (hold). Phone B shows "You were removed". Re-entering the code says the host removed you.
+11. Host: End lobby (hold). Any guest still inside sees "This lobby has ended", and the code no longer works.
+12. Share link from Phone A to Phone B, and tap it. CloakRun opens straight into joining. If Phone B has not finished
+    onboarding, it joins right after the profile step.
+13. Profile: Delete my account and data (hold). The app returns to the rules step, not the age gate.

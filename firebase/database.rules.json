@@ -1,6 +1,65 @@
 {
   "rules": {
     ".read": false,
-    ".write": false
+    ".write": false,
+
+    "lobbies": {
+      "$matchId": {
+        ".read": "auth != null && (data.child('members').child(auth.uid).exists() || data.child('host').val() === auth.uid)",
+        ".write": "auth != null && data.child('host').val() === auth.uid && !newData.exists()",
+        ".validate": "$matchId.length >= 16 && $matchId.length <= 40",
+
+        "host": {
+          ".write": "auth != null && !data.exists() && newData.val() === auth.uid",
+          ".validate": "newData.isString()"
+        },
+        "members": {
+          "$uid": {
+            ".write": "auth != null && ((auth.uid === $uid && (!newData.exists() || (root.child('lobbies').child($matchId).child('host').exists() && !root.child('lobbies').child($matchId).child('kicked').child($uid).exists()))) || root.child('lobbies').child($matchId).child('host').val() === auth.uid)",
+            ".validate": "newData.val() === true"
+          }
+        },
+        "kicked": {
+          "$uid": {
+            ".write": "auth != null && root.child('lobbies').child($matchId).child('host').val() === auth.uid",
+            ".validate": "newData.val() === true"
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+
+    "presence": {
+      "$matchId": {
+        ".read": "auth != null && root.child('lobbies').child($matchId).child('members').child(auth.uid).exists()",
+        ".write": "auth != null && root.child('lobbies').child($matchId).child('host').val() === auth.uid && !newData.exists()",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid && (!newData.exists() || root.child('lobbies').child($matchId).child('members').child($uid).exists())",
+          ".validate": "newData.hasChildren(['online', 'at'])",
+          "online": { ".validate": "newData.isBoolean()" },
+          "at": { ".validate": "newData.val() === now" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+
+    "public": {
+      "$matchId": {
+        ".read": "auth != null && root.child('lobbies').child($matchId).child('members').child(auth.uid).exists()",
+        ".write": "auth != null && root.child('lobbies').child($matchId).child('host').val() === auth.uid && !newData.exists()",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid && (!newData.exists() || (root.child('lobbies').child($matchId).child('members').child($uid).exists() && (!data.exists() || now - data.child('at').val() >= 2000)))",
+          ".validate": "newData.hasChildren(['lat', 'lng', 'radiusM', 'status', 'at'])",
+          "lat": { ".validate": "newData.isNumber() && newData.val() >= -85 && newData.val() <= 85" },
+          "lng": { ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180" },
+          "radiusM": { ".validate": "newData.isNumber() && newData.val() >= 25 && newData.val() <= 2000" },
+          "status": { ".validate": "newData.isString() && newData.val().matches(/^(hiding|cloaked|caught|seeking|spectating)$/)" },
+          "at": { ".validate": "newData.val() === now" },
+          "$other": { ".validate": false }
+        }
+      }
+    }
   }
 }

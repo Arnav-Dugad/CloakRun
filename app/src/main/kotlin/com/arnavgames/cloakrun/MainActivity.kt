@@ -2,6 +2,7 @@ package com.arnavgames.cloakrun
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
@@ -25,15 +26,22 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import com.arnavgames.cloakrun.core.data.PlayerPrefs
+import com.arnavgames.cloakrun.core.data.PlayerState
 import com.arnavgames.cloakrun.core.designsystem.theme.CloakTheme
 import com.arnavgames.cloakrun.core.designsystem.theme.LocalTopChromeInset
 import com.arnavgames.cloakrun.core.designsystem.theme.ThemePreference
+import com.arnavgames.cloakrun.core.game.lobby.InviteLink
 import com.arnavgames.cloakrun.core.location.LocationRepository
 import com.arnavgames.cloakrun.core.location.TrackingController
 import com.arnavgames.cloakrun.core.map.LocalMapOverlayContributors
+import com.arnavgames.cloakrun.feature.home.HomePlayer
 import com.arnavgames.cloakrun.navigation.CloakRunNavigation
+import com.arnavgames.cloakrun.navigation.NavigationInput
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -41,14 +49,25 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var trackingController: TrackingController
 
+    @Inject lateinit var playerPrefs: PlayerPrefs
+
+    /** An invite link that opened the app, waiting for the graph to handle it. */
+    private var pendingInvite by mutableStateOf<String?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().handOffToContent()
+        val splash = installSplashScreen()
+        splash.handOffToContent()
+        if (savedInstanceState == null) pendingInvite = intent.inviteLink()
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
         )
         super.onCreate(savedInstanceState)
         val overlays = debugMapOverlays(locationRepository, trackingController)
+        var player: PlayerState? by mutableStateOf(null)
+        // Keep the splash up until we know whether to show onboarding or home (a few milliseconds).
+        splash.setKeepOnScreenCondition { player == null }
+        lifecycleScope.launch { playerPrefs.state.collect { player = it } }
         setContent {
             CloakTheme(preference = ThemePreference.Night) {
                 CompositionLocalProvider(LocalMapOverlayContributors provides overlays) {
@@ -58,7 +77,19 @@ class MainActivity : ComponentActivity() {
                     AppUpdates.LaunchCheck()
                     Box(Modifier.fillMaxSize()) {
                         CompositionLocalProvider(LocalTopChromeInset provides inset) {
-                            CloakRunNavigation(versionName = BuildConfig.VERSION_NAME, onOpenUpdates = { updateSheet = true })
+                            player?.let { p ->
+                                CloakRunNavigation(
+                                    NavigationInput(
+                                        onboarded = p.onboarded,
+                                        player = p.profile?.let { HomePlayer(it.name, it.avatarSeed) },
+                                        activeMatchId = p.activeMatchId,
+                                        pendingInvite = pendingInvite,
+                                        onInviteHandled = { pendingInvite = null },
+                                        versionName = BuildConfig.VERSION_NAME,
+                                        onOpenUpdates = { updateSheet = true },
+                                    ),
+                                )
+                            }
                         }
                         LocationSharingIndicator(sharing, Modifier.align(Alignment.TopCenter))
                         AppUpdates.SheetHost(visible = updateSheet, onDismiss = { updateSheet = false })
@@ -67,6 +98,15 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        intent.inviteLink()?.let { pendingInvite = it }
+    }
+
+    /** The invite URL from an App Link (https://arnav-dugad.github.io/join/?code=...), if any. */
+    private fun Intent?.inviteLink(): String? =
+        this?.takeIf { it.action == Intent.ACTION_VIEW }?.data?.toString()?.takeIf { InviteLink.parse(it) != null }
 
     /**
      * Exit transition: the emblem swells slightly while the splash fades, so it hands over to the

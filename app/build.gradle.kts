@@ -90,14 +90,19 @@ android {
 // from a secret. Without it the app builds and runs fully offline (see docs/FIREBASE_SETUP.md).
 if (file("google-services.json").exists()) {
     apply(plugin = libs.plugins.google.services.get().pluginId)
+    apply(plugin = libs.plugins.firebase.crashlytics.get().pluginId)
 }
 
 dependencies {
+    implementation(projects.core.data)
     implementation(projects.core.designsystem)
     implementation(projects.core.location)
     implementation(projects.core.map)
     implementation(projects.feature.home)
     implementation(projects.feature.playarea)
+    implementation(projects.feature.onboarding)
+    implementation(projects.feature.lobby)
+    implementation(projects.feature.profile)
     debugImplementation(projects.feature.devtools)
     "sideloadImplementation"(projects.feature.update)
 

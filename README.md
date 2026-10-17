@@ -20,7 +20,10 @@ fuzzy last-known zone. That makes every match fair and tense, and makes cheating
 
 ## Features
 
-- **Real-city play area.** The host draws a circle or polygon over a neighbourhood, campus or park.
+- **Real-city play area.** The host draws a circle or polygon over a neighbourhood, campus or park, or snaps to a
+  park's real edge. Roads, rail, water and private land inside are cut out as no-go zones.
+- **Private lobbies.** Friends join with a six-character code, a QR code or an invite link that opens the app
+  directly.
 - **Privacy by design.** Exact GPS stays on your device. The cloud sees a fuzzed zone that shrinks over time.
 - **Proximity tagging over Bluetooth.** A tag needs the seeker's phone to actually hear the hider's rotating
   ephemeral ID at close range. Spoofing GPS doesn't get you a catch.
@@ -65,6 +68,7 @@ See [docs/FIREBASE_SETUP.md](docs/FIREBASE_SETUP.md) to connect a project.
 - [Quota budget](docs/QUOTA_BUDGET.md)
 - [Releasing](docs/RELEASING.md)
 - [Test plan](docs/TEST_PLAN.md)
+- [Privacy policy (draft)](docs/PRIVACY_POLICY.md)
 - [Changelog](CHANGELOG.md)
 
 ## Licence

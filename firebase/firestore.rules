@@ -2,13 +2,269 @@ rules_version = '2';
 
 // CloakRun Firestore rules.
 //
-// Phase 0 baseline: everything is denied. The game data model and its rules land in
-// Phase 3 together with emulator tests in firebase/tests. Deny-by-default means a
-// freshly created project is never left open, even before the real rules ship.
+// There is no server: the host's phone referees the match and these rules enforce everything that
+// can be checked from a single write. Deny by default; every allowed path validates its exact
+// shape, sizes, timestamps and who may change which field. Tested in firebase/tests against the
+// emulator before every deploy.
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+
+    // ---------- helpers ----------
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isName(v) {
+      return v is string && v.size() >= 2 && v.size() <= 20
+        && v.matches('^[^\\s<>{}\\[\\]"\\\\]([^<>{}\\[\\]"\\\\]*[^\\s<>{}\\[\\]"\\\\])?$');
+    }
+
+    function isSeed(v) {
+      return v is string && v.matches('^[a-z0-9]{6,32}$');
+    }
+
+    function isCode(v) {
+      return v is string && v.matches('^[2-9A-HJKMNP-Z]{6}$');
+    }
+
+    function onlyChanges(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    // Matches expire six hours after creation. TTL policies need billing, so expiry is enforced
+    // here instead: expired matches cannot be joined and anyone may delete them.
+    function expired(d) {
+      return request.time > d.createdAt + duration.value(6, 'h');
+    }
+
+    // Writes to the same document at most once per `ms` milliseconds.
+    function notTooSoon(ms) {
+      return request.time > resource.data.updatedAt + duration.value(ms, 'ms');
+    }
+
+    // ---------- users ----------
+
+    match /users/{uid} {
+      function validUser(d) {
+        return d.keys().hasOnly(['name', 'avatarSeed', 'createdAt', 'updatedAt'])
+          && isName(d.name) && isSeed(d.avatarSeed)
+          && d.createdAt is timestamp && d.updatedAt == request.time;
+      }
+
+      allow get: if isUser(uid);
+      allow create: if isUser(uid) && validUser(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update: if isUser(uid) && validUser(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && notTooSoon(1000);
+      allow delete: if isUser(uid);
+    }
+
+    // ---------- join codes ----------
+
+    // A code points at one open match. Anyone signed in may look up a code they know (no listing).
+    match /joinCodes/{code} {
+      allow get: if signedIn();
+      allow create: if signedIn() && isCode(code)
+        && request.resource.data.keys().hasOnly(['matchId', 'hostUid', 'createdAt'])
+        && request.resource.data.hostUid == request.auth.uid
+        && request.resource.data.createdAt == request.time
+        && getAfter(/databases/$(database)/documents/matches/$(request.resource.data.matchId)).data.hostUid == request.auth.uid
+        && getAfter(/databases/$(database)/documents/matches/$(request.resource.data.matchId)).data.code == code;
+      allow delete: if signedIn() && (
+        resource.data.hostUid == request.auth.uid
+        || request.time > resource.data.createdAt + duration.value(6, 'h')
+      );
+    }
+
+    // ---------- matches ----------
+
+    match /matches/{matchId} {
+      function matchDoc() {
+        return get(/databases/$(database)/documents/matches/$(matchId));
+      }
+
+      function playerPath(uid) {
+        return /databases/$(database)/documents/matches/$(matchId)/players/$(uid);
+      }
+
+      function validConfig(c) {
+        return c.keys().hasOnly(['mode', 'seekers', 'headStartSec', 'huntMin', 'maxPlayers'])
+          && c.mode == 'classic'
+          && c.maxPlayers is int && c.maxPlayers >= 2 && c.maxPlayers <= 8
+          && c.seekers is int && c.seekers >= 1 && c.seekers < c.maxPlayers
+          && c.headStartSec is int && c.headStartSec >= 30 && c.headStartSec <= 600
+          && c.huntMin is int && c.huntMin >= 5 && c.huntMin <= 60;
+      }
+
+      function validArea(a) {
+        return a.keys().hasOnly(['kind', 'lat', 'lng', 'radiusM', 'points'])
+          && a.lat is number && a.lat >= -85 && a.lat <= 85
+          && a.lng is number && a.lng >= -180 && a.lng <= 180
+          && (
+            (a.kind == 'circle' && a.radiusM is number && a.radiusM >= 50 && a.radiusM <= 1000 && a.points.size() == 0)
+            || (a.kind == 'polygon' && a.radiusM == 0 && a.points is list && a.points.size() >= 6
+                && a.points.size() <= 48 && a.points.size() % 2 == 0)
+          );
+      }
+
+      // Legal phase changes, all made by the host. Any phase may end the match.
+      function legalPhaseChange(from, to) {
+        return from == to
+          || to == 'ended'
+          || (from == 'lobby' && to == 'briefing')
+          || (from == 'briefing' && (to == 'headstart' || to == 'lobby'))
+          || (from == 'headstart' && to == 'hunt')
+          || (from == 'hunt' && to == 'results')
+          || (from == 'results' && to == 'lobby');
+      }
+
+      function isHost() {
+        return signedIn() && resource.data.hostUid == request.auth.uid;
+      }
+
+      // Knowing the random match id means you were given the code, so a signed-in player may read
+      // the lobby before joining. Listing matches is never allowed.
+      allow get: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'hostUid', 'code', 'phase', 'config', 'area', 'playerCount', 'kicked',
+          'createdAt', 'updatedAt', 'phaseAt'
+        ])
+        && request.resource.data.hostUid == request.auth.uid
+        && isCode(request.resource.data.code)
+        && request.resource.data.phase == 'lobby'
+        && validConfig(request.resource.data.config)
+        && validArea(request.resource.data.area)
+        && request.resource.data.playerCount == 1
+        && request.resource.data.kicked == []
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.phaseAt == request.time
+        && existsAfter(playerPath(request.auth.uid))
+        && getAfter(/databases/$(database)/documents/joinCodes/$(request.resource.data.code)).data.matchId == matchId;
+
+      // Host: settings in the lobby, phase changes, and kicking (one player per write).
+      allow update: if isHost()
+        && onlyChanges(['config', 'area', 'phase', 'phaseAt', 'playerCount', 'kicked', 'updatedAt'])
+        && request.resource.data.updatedAt == request.time
+        && notTooSoon(250)
+        && validConfig(request.resource.data.config)
+        && validArea(request.resource.data.area)
+        && legalPhaseChange(resource.data.phase, request.resource.data.phase)
+        && (request.resource.data.phase == resource.data.phase
+            ? request.resource.data.phaseAt == resource.data.phaseAt
+            : request.resource.data.phaseAt == request.time)
+        && (resource.data.phase == 'lobby'
+            || (request.resource.data.config == resource.data.config && request.resource.data.area == resource.data.area))
+        && (
+          (request.resource.data.kicked == resource.data.kicked
+            && request.resource.data.playerCount == resource.data.playerCount)
+          || (request.resource.data.kicked.size() == resource.data.kicked.size() + 1
+            && request.resource.data.kicked.size() <= 32
+            && request.resource.data.kicked.hasAll(resource.data.kicked)
+            && request.resource.data.playerCount == resource.data.playerCount - 1
+            && exists(playerPath(request.resource.data.kicked[resource.data.kicked.size()]))
+            && !existsAfter(playerPath(request.resource.data.kicked[resource.data.kicked.size()])))
+        );
+
+      // Everyone else: only the player count, and only together with creating or deleting their
+      // own player document in the same transaction.
+      allow update: if signedIn() && !isHost()
+        && onlyChanges(['playerCount'])
+        && (
+          (request.resource.data.playerCount == resource.data.playerCount + 1
+            && request.resource.data.playerCount <= resource.data.config.maxPlayers
+            && resource.data.phase == 'lobby'
+            && !expired(resource.data)
+            && !(request.auth.uid in resource.data.kicked)
+            && !exists(playerPath(request.auth.uid))
+            && existsAfter(playerPath(request.auth.uid)))
+          || (request.resource.data.playerCount == resource.data.playerCount - 1
+            && exists(playerPath(request.auth.uid))
+            && !existsAfter(playerPath(request.auth.uid)))
+        );
+
+      // The host ends and cleans up; anyone may clear a match that has expired.
+      allow delete: if isHost() || (signedIn() && expired(resource.data));
+
+      // ---------- players ----------
+
+      match /players/{uid} {
+        function isMember() {
+          return signedIn() && exists(playerPath(request.auth.uid));
+        }
+
+        function matchHostUid() {
+          return matchDoc().data.hostUid;
+        }
+
+        function validPlayer(d) {
+          return d.keys().hasOnly(['name', 'avatarSeed', 'role', 'ready', 'briefed', 'joinedAt', 'updatedAt'])
+            && isName(d.name) && isSeed(d.avatarSeed)
+            && d.role in ['unassigned', 'hider', 'seeker', 'spectator']
+            && d.ready is bool && d.briefed is bool
+            && d.joinedAt is timestamp && d.updatedAt == request.time;
+        }
+
+        allow get, list: if isMember() || (signedIn() && matchHostUid() == request.auth.uid);
+        // Your own document, even before it exists: lets a phone check whether it already joined.
+        allow get: if isUser(uid);
+
+        // Joining: your own document, unassigned and not ready, with the player count moving in
+        // the same transaction (checked on the match). The host's own document is created with
+        // the match itself.
+        allow create: if isUser(uid)
+          && validPlayer(request.resource.data)
+          && request.resource.data.role == 'unassigned'
+          && request.resource.data.ready == false
+          && request.resource.data.briefed == false
+          && request.resource.data.joinedAt == request.time
+          && (
+            (exists(/databases/$(database)/documents/matches/$(matchId))
+              && getAfter(/databases/$(database)/documents/matches/$(matchId)).data.playerCount
+                == matchDoc().data.playerCount + 1)
+            || (!exists(/databases/$(database)/documents/matches/$(matchId))
+              && getAfter(/databases/$(database)/documents/matches/$(matchId)).data.hostUid == uid)
+          );
+
+        // You may change your name, avatar and readiness (lobby), or confirm the briefing.
+        allow update: if isUser(uid)
+          && validPlayer(request.resource.data)
+          && onlyChanges(['name', 'avatarSeed', 'ready', 'briefed', 'updatedAt'])
+          && notTooSoon(400)
+          && (request.resource.data.ready == resource.data.ready || matchDoc().data.phase == 'lobby')
+          && (request.resource.data.briefed == resource.data.briefed
+              || (matchDoc().data.phase == 'briefing' && request.resource.data.briefed == true));
+
+        // The host assigns roles in the lobby (and resets readiness for a rematch).
+        allow update: if signedIn() && matchHostUid() == request.auth.uid
+          && validPlayer(request.resource.data)
+          && onlyChanges(['role', 'ready', 'briefed', 'updatedAt'])
+          && (request.resource.data.ready == resource.data.ready || request.resource.data.ready == false)
+          && (request.resource.data.briefed == resource.data.briefed || request.resource.data.briefed == false)
+          && matchDoc().data.phase == 'lobby';
+
+        // Leaving (with the count moving, checked on the match), being kicked or cleaned up by the
+        // host, or clearing an expired match.
+        allow delete: if (isUser(uid)
+            && getAfter(/databases/$(database)/documents/matches/$(matchId)).data.playerCount
+              == matchDoc().data.playerCount - 1)
+          || (signedIn() && matchHostUid() == request.auth.uid && (
+            !existsAfter(/databases/$(database)/documents/matches/$(matchId))
+            || uid in getAfter(/databases/$(database)/documents/matches/$(matchId)).data.kicked
+          ))
+          || (signedIn() && (
+            !exists(/databases/$(database)/documents/matches/$(matchId))
+            || expired(matchDoc().data)
+          ));
+      }
     }
   }
 }
