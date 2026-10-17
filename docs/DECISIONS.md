@@ -151,3 +151,51 @@ This also enforces that no component animates forever when motion is reduced.
 
 `feature:devtools` holds the Design Gallery now, and Simulation Mode and the debug overlay in Phase 2. The app depends
 on it with `debugImplementation`, so its code, strings and launcher entry never reach release builds.
+
+## D-020 MapLibre Native through AndroidView, OpenGL ES backend (2026-10-17)
+
+The MapLibre Compose wrapper (`org.maplibre.compose` 0.20) is still pre-1.0. Its public API is being reshaped and it
+no longer uses the Android SDK, so it is not used. `CloakMap` wraps `org.maplibre.gl:android-sdk-opengl` 13.7.1 in
+an `AndroidView` and forwards lifecycle. The OpenGL ES artifact is chosen over the default Vulkan one for the widest
+device compatibility down to Android 8. When glass blur is active the map renders into a TextureView, because a
+SurfaceView cannot be captured by RenderEffect, so glass panels blur the live map. Other tiers keep the cheaper
+SurfaceView.
+
+## D-021 Game overlays are Compose, synced to map frames (2026-10-17)
+
+The player dot, play-area energy line, bots, and later the fuzzy zones and radar are drawn in Compose above the map.
+They are not MapLibre style layers, because they need springs, AGSL shaders and per-frame animation that style
+layers cannot express. `CloakMapState.frame` increments on every rendered map frame. Overlays read it in draw or
+layout scope, so they follow pans and zooms without recomposing. Static geography stays in the style.
+
+## D-022 Debug tooling enters through build-type source sets (2026-10-17)
+
+`app/src/debug` supplies the Simulation Mode overlay, and `app/src/release` supplies an empty list. Release code never
+references `feature:devtools`. The only hook in shipped code is the inert `LocationRepository.sourceOverride`, which
+release builds never set.
+
+## D-023 Location architecture (2026-10-17)
+
+A single `LocationRepository` owns every location read. Callers declare a `TrackingMode`. The repository applies
+`SamplingPolicy` to battery, power-saver and opponent distance, and shares one fused request between all
+collectors. Location is read only while scouting with the screen visible, in a lobby, or during a match. The match
+foreground service (type `location`) is always started from the foreground, so `ACCESS_BACKGROUND_LOCATION` is never
+requested. An app-wide pill shows whenever the service runs, and screens reserve room for it through
+`LocalTopChromeInset`.
+
+## D-024 Local geofencing (2026-10-17)
+
+Zone enter, exit and near-edge are computed on the device by `ZoneWatcher` on every fix, with accuracy-scaled
+hysteresis. Platform geofences are not used: they support circles only, need background location for reliable
+delivery, and can fire minutes late.
+
+## D-025 Play-area limits (2026-10-17)
+
+The default limits are 2 ha to 3 km² and 3 to 24 polygon corners. The circle radius therefore runs from 80 m to
+977 m. Self-intersecting polygons are rejected. The limits live in `PlayAreaRules` and will be tunable from Remote
+Config.
+
+## D-026 Wordmark on light themes (2026-10-17)
+
+The lockup's luminous wordmark is designed for dark grounds and nearly vanishes on Daylight. Light themes render it
+as the single-colour ink variant (a tint, not a redraw). This was caught by the Home screenshot test.

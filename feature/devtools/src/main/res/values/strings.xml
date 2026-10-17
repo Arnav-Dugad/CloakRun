@@ -64,4 +64,17 @@
     <string name="gallery_expand">Expand</string>
     <string name="gallery_collapse">Collapse</string>
     <string name="gallery_avatar_cd">Avatar for %1$s</string>
+    <string name="sim_toggle">Simulation</string>
+    <string name="sim_spawn">Spawn bots</string>
+    <string name="sim_walk_me">Walk me</string>
+    <string name="sim_clear">Clear</string>
+    <string name="sim_tracking">Match service</string>
+    <string name="sim_speed_1">1x</string>
+    <string name="sim_speed_4">4x</string>
+    <string name="sim_speed_10">10x</string>
+    <string name="sim_no_streets">No walkable streets in view. Zoom in or move the map.</string>
+    <string name="sim_hud">%1$d fps   fix %2$s   %3$s   bots %4$d</string>
+    <string name="sim_hud_no_fix">none</string>
+    <string name="sim_hud_mock">MOCK</string>
+    <string name="sim_hud_real">real</string>
 </resources>

@@ -138,7 +138,8 @@ androidx-credentials-play-services-auth = { module = "androidx.credentials:crede
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 
 # Map and QR
-maplibre-android = { module = "org.maplibre.gl:android-sdk", version.ref = "maplibre" }
+# OpenGL ES backend: widest device compatibility (see DECISIONS D-020).
+maplibre-android = { module = "org.maplibre.gl:android-sdk-opengl", version.ref = "maplibre" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
 
 # Testing

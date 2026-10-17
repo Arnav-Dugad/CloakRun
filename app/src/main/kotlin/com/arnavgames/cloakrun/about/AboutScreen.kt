@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arnavgames.cloakrun.R
 import com.arnavgames.cloakrun.core.designsystem.R as DesignR
+import com.arnavgames.cloakrun.core.designsystem.component.CloakWordmark
 import com.arnavgames.cloakrun.core.designsystem.component.GlassCard
 import com.arnavgames.cloakrun.core.designsystem.component.NightBackdrop
 import com.arnavgames.cloakrun.core.designsystem.glass.GlassScene
@@ -124,8 +125,7 @@ private fun EmblemHeader() {
                 },
         )
         Spacer(Modifier.height(CloakTheme.spacing.xl))
-        Image(
-            painter = painterResource(DesignR.drawable.cr_wordmark),
+        CloakWordmark(
             contentDescription = stringResource(R.string.cd_wordmark),
             modifier = Modifier
                 .width(248.dp)

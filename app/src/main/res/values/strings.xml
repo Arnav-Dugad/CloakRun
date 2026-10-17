@@ -13,4 +13,6 @@
     <string name="about_copyright">Copyright 2026 Arnav Games. All rights reserved.</string>
     <string name="cd_emblem">CloakRun emblem</string>
     <string name="cd_wordmark">CloakRun</string>
+    <string name="sharing_indicator">Sharing your fuzzy zone</string>
+    <string name="sharing_indicator_cd">Location sharing is on for this match</string>
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tracking_channel_name">Match location</string>
+    <string name="tracking_channel_description">Shown while a match is using your location. Your exact position never leaves your phone.</string>
+    <string name="tracking_notification_title">CloakRun match in progress</string>
+    <string name="tracking_notification_text">Sharing only your fuzzy zone. Tap to return to the match.</string>
+    <string name="tracking_notification_stop">Stop sharing</string>
+</resources>

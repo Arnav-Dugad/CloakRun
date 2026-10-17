@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.cloakrun.android.application)
     alias(libs.plugins.cloakrun.android.compose)
     alias(libs.plugins.cloakrun.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val versionProps = Properties().apply {
@@ -93,7 +94,17 @@ if (file("google-services.json").exists()) {
 
 dependencies {
     implementation(projects.core.designsystem)
+    implementation(projects.core.location)
+    implementation(projects.core.map)
+    implementation(projects.feature.home)
+    implementation(projects.feature.playarea)
     debugImplementation(projects.feature.devtools)
+
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)

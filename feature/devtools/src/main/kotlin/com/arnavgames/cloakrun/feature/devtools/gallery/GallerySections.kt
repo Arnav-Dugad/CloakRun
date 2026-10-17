@@ -44,6 +44,7 @@ import com.arnavgames.cloakrun.core.designsystem.component.CloakChip
 import com.arnavgames.cloakrun.core.designsystem.component.CloakSlider
 import com.arnavgames.cloakrun.core.designsystem.component.CloakTextField
 import com.arnavgames.cloakrun.core.designsystem.component.CloakToggle
+import com.arnavgames.cloakrun.core.designsystem.component.CloakWordmark
 import com.arnavgames.cloakrun.core.designsystem.component.GlassCard
 import com.arnavgames.cloakrun.core.designsystem.component.GlassSheetLayout
 import com.arnavgames.cloakrun.core.designsystem.component.HoldToConfirmButton
@@ -70,7 +71,7 @@ internal fun BrandSection() {
     GlassCard {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Image(painterResource(DesignR.drawable.cr_emblem), contentDescription = null, modifier = Modifier.size(72.dp))
-            Image(painterResource(DesignR.drawable.cr_wordmark), contentDescription = null, modifier = Modifier.width(200.dp))
+            CloakWordmark(contentDescription = null, modifier = Modifier.width(200.dp))
         }
     }
 }

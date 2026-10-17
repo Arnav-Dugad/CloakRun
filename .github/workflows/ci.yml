@@ -17,7 +17,7 @@ env:
   CHECK_TASKS: >-
     spotlessCheck detekt
     lintDebug lintSideloadDebug
-    testDebugUnitTest testSideloadDebugUnitTest
+    testDebugUnitTest testSideloadDebugUnitTest :core:game:test
     verifyRoborazziDebug
     assembleSideloadDebug
 

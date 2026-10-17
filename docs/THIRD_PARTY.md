@@ -11,5 +11,11 @@ components under their own licences.
 | Kotlin, kotlinx libraries | Apache License 2.0 | https://kotlinlang.org |
 | Dagger Hilt | Apache License 2.0 | https://dagger.dev/hilt |
 
-Components added in later phases (MapLibre Native, Haze, Firebase, ZXing) are listed here as they land. Map data:
-OpenStreetMap contributors (ODbL), with tiles from OpenFreeMap and OpenMapTiles.
+| MapLibre Native for Android | BSD 2-Clause | https://github.com/maplibre/maplibre-native |
+| Haze | Apache License 2.0 | https://github.com/chrisbanes/haze |
+| Google Play services Location | Android Software Development Kit License | https://developers.google.com/android/guides/overview |
+
+Map data (c) OpenStreetMap contributors, available under the Open Database License. Vector tiles (c) OpenMapTiles,
+served by OpenFreeMap. The attribution control is always visible on the map.
+
+Firebase and ZXing are listed here when they land.

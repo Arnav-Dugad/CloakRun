@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playarea_title">Play area</string>
+    <string name="playarea_back">Back</string>
+    <string name="playarea_shape_circle">Circle</string>
+    <string name="playarea_shape_polygon">Polygon</string>
+    <string name="playarea_hint_circle">Tap the map to move the centre. Drag the slider to resize.</string>
+    <string name="playarea_hint_polygon">Tap the map to add corners. Drag a corner to move it.</string>
+    <string name="playarea_radius">Radius</string>
+    <string name="playarea_radius_value">%1$d m</string>
+    <string name="playarea_area_label">Area</string>
+    <string name="playarea_unit_m2">m²</string>
+    <string name="playarea_unit_ha">ha</string>
+    <string name="playarea_unit_km2">km²</string>
+    <string name="playarea_valid">Ready to play</string>
+    <string name="playarea_too_small">Too small. Make it at least %1$s.</string>
+    <string name="playarea_too_large">Too large. Keep it under %1$s.</string>
+    <string name="playarea_self_intersecting">The edges cross. Move a corner to untangle it.</string>
+    <string name="playarea_too_few">Add at least 3 corners.</string>
+    <string name="playarea_center_on_me">Locate me</string>
+    <string name="playarea_undo">Undo corner</string>
+    <string name="playarea_clear">Clear</string>
+    <string name="playarea_save">Save area</string>
+    <string name="playarea_saved">Saved. You can use it when you host a lobby.</string>
+    <string name="playarea_style_auto">Map style: automatic</string>
+    <string name="playarea_style_night">Map style: night</string>
+    <string name="playarea_style_day">Map style: day</string>
+    <string name="playarea_permission_title">Show where you are</string>
+    <string name="playarea_permission_body">CloakRun uses your location to centre the map while you plan. It stays on your phone.</string>
+    <string name="playarea_permission_allow">Allow location</string>
+    <string name="playarea_location_off">Location is off. You can still pan the map and draw an area.</string>
+    <string name="playarea_corner_handle">Corner %1$d</string>
+    <string name="playarea_safety">Choose public, walkable places. Avoid roads, water, rail lines and private property.</string>
+    <plurals name="playarea_too_many">
+        <item quantity="one">Use at most %1$d corner.</item>
+        <item quantity="other">Use at most %1$d corners.</item>
+    </plurals>
+</resources>
