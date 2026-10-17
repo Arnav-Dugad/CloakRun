@@ -5,6 +5,8 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-17
+
 ### Added
 
 - Play with friends. Host a private lobby on your play area, or join with a six-character code, a QR code or an
