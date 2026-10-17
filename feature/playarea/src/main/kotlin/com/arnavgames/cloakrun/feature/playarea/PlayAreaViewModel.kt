@@ -3,6 +3,7 @@ package com.arnavgames.cloakrun.feature.playarea
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arnavgames.cloakrun.core.data.PlayAreaStore
 import com.arnavgames.cloakrun.core.game.area.PlayAreaCheck
 import com.arnavgames.cloakrun.core.game.area.PlayAreaRules
 import com.arnavgames.cloakrun.core.game.geo.GeoPoint

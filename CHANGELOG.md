@@ -5,6 +5,29 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Play with friends. Host a private lobby on your play area, or join with a six-character code, a QR code or an
+  invite link (`arnav-dugad.github.io/join`). Links open the app directly when it is installed.
+- Lobby:
+  - players orbit the split-flap join code, with live presence
+  - the host sets seekers, head start, hunt length and lobby size
+  - the host shuffles roles fairly, or taps a player to switch their role
+  - the host can remove a player for good
+  - players mark themselves ready
+- Briefing: everyone sees their role revealed with the safety rules and confirms before play. Live matches (head
+  start and hunt) arrive in the next release.
+- Onboarding: age gate (13 and over, with a supervision note for under 18s), stay-safe rules, a plain "who sees
+  what" consent screen, and a generated name and avatar.
+- Profile: edit your name and avatar, link a Google account to keep your profile across phones, turn diagnostics
+  on or off, and delete your account and data.
+- Accounts are anonymous by default, so no sign-up is needed.
+- Security Rules for Firestore and the Realtime Database, tested against the emulator (38 tests) and deployed.
+
+### Changed
+
+- In-app updates install without the system prompt from this version on (Android 12 and newer).
+
 ## [0.5.0] - 2026-10-17
 
 ### Added

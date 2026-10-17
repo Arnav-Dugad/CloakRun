@@ -118,13 +118,27 @@ On Windows Git Bash, `base64 -w0` works as shown. Without this secret, CI builds
 
 ## Done checklist
 
-- [ ] Project on Spark, Analytics on
-- [ ] Two Android apps with SHA-1 and SHA-256 fingerprints
-- [ ] Anonymous and Google sign-in enabled; Web client ID noted
-- [ ] Firestore (Standard, `(default)`, production mode) created
-- [ ] Realtime Database (locked) created
-- [ ] App Check registered, PLAY_RECOGNIZED off, nothing enforced
-- [ ] API key restricted
-- [ ] `app/google-services.json` saved locally
-- [ ] `GOOGLE_SERVICES_JSON_B64` secret set
-- [ ] Rules deployed (only after the go-ahead)
+Status for project `cloakrun-a0d71` on 2026-10-17:
+
+- [x] Project on Spark, Analytics on
+- [x] Two Android apps with SHA-1 and SHA-256 fingerprints
+- [x] Anonymous and Google sign-in enabled; Web client ID noted (it is in `core/data/.../Backend.kt`)
+- [x] Firestore (Standard, `(default)`, production mode) created
+- [x] Realtime Database (locked) created, `asia-southeast1`; its URL is pinned in `Backend.kt`
+- [x] App Check registered, PLAY_RECOGNIZED off, nothing enforced
+- [x] API key restricted
+- [x] `app/google-services.json` saved locally
+- [x] `GOOGLE_SERVICES_JSON_B64` secret set
+- [x] Rules deployed after the emulator tests passed (38 tests)
+- [ ] App Check debug token for the debug app registered. Optional while App Check is in monitor mode. Run the debug
+      app, find `Firebase App Check debug token` in Logcat, and add it under **App Check > Apps > CloakRun Debug >
+      Manage debug tokens**. Treat that token like a password.
+
+## Redeploying rules
+
+Change rules only together with their tests in `firebase/tests`, then:
+
+```bash
+cd firebase/tests && npm test                     # must be green
+cd ../.. && firebase deploy --only firestore:rules,firestore:indexes,database --project cloakrun-a0d71
+```

@@ -221,6 +221,9 @@ The sideload flavour updates itself from GitHub Releases. The play flavour has n
   - Sessions report staging progress and use the system confirmation.
   - Once CloakRun is the installer of record, Android 12+ can skip the prompt (`USER_ACTION_NOT_REQUIRED`). This was
     verified on the emulator: after one in-app update, the installer of record is `com.arnavgames.cloakrun`.
+  - Skipping the prompt also needs the normal permission `UPDATE_PACKAGES_WITHOUT_USER_ACTION` in the running
+    version. The v0.4.0 to v0.5.0 test still prompted because it was missing. It was added in v0.6.0, so updates from
+    v0.6.0 onwards install without a prompt.
 - **Debug builds** never update from GitHub: they use the `.debug` package and the debug key.
 
 ## D-028 Release notes extraction (2026-10-17)
@@ -279,3 +282,80 @@ An on-device check of a trail flags these, and only fixes with accuracy of 25 m 
 The score starts at 100. 85 or more is Clean, 50 or more is Suspicious, and anything lower is Likely spoofed. In
 line with the brief, results are flagged to the host and never auto-banned. It complements the Bluetooth proximity
 proof planned for tags in Phase 4.
+
+## D-032 Lobby data model and who may write what (2026-10-17)
+
+There is no server, so the Security Rules carry the authority. The model is shaped so each rule can be checked
+from a single write.
+
+**Joining and leaving** are transactions. Each one moves `matches/{id}.playerCount` together with creating or
+deleting the player's own document. The rules check both sides with `getAfter`, so the cap (2 to 8 players) holds
+without a server.
+
+**Players** may change their own name, avatar and readiness in the lobby, and confirm the briefing during the
+briefing. Writes are rate limited to one per 400 ms.
+
+**The host** may:
+- assign roles, in the lobby only
+- change settings, in the lobby only
+- move the phase along the legal graph: lobby, briefing, headstart, hunt, results, then lobby again, with `ended`
+  reachable from any phase
+- kick one player per write
+
+A kick appends to `kicked`, decrements the count and deletes the player document in the same transaction. Kicked
+players can never rejoin that lobby.
+
+**Expiry.** Firestore TTL needs billing, so expiry is `createdAt + 6 h`, checked by the rules. Expired lobbies
+cannot be joined, and anyone signed in may delete them.
+
+**Visibility.** A signed-in player may `get` a match when they know its random id, which means they were given the
+code. Listing matches or codes is never allowed. Only members can read the player list.
+
+**Join codes** live in `joinCodes/{code}` and are created in the same batch as the match. A taken code fails that
+batch and the client retries with a new code.
+
+## D-033 Realtime Database membership mirror (2026-10-17)
+
+RTDB rules cannot read Firestore, so `/lobbies/{match}` mirrors membership:
+- **host:** written once by the first claimant, which is the creating client
+- **members:** each player adds or removes only themselves, and only while the lobby has a host and they are not
+  kicked
+- **kicked:** written only by the host
+
+Presence (`/presence`) and fuzzed zones (`/public`) are readable by members only. Zones are validated to have a
+radius of at least 25 m and no extra fields, and one update per 2 seconds. Presence uses `onDisconnect`, so a phone
+that drops shows as offline.
+
+## D-034 Invite links on the GitHub Pages user site (2026-10-17)
+
+Invites are `https://arnav-dugad.github.io/join/?code=XXXXXX`, served from the `Arnav-Dugad/Arnav-Dugad.github.io`
+repository. The QR code and the share text use the same URL:
+- With CloakRun installed, the verified App Link opens the app straight into joining.
+- Without it, the page shows the code and a download button.
+
+`/.well-known/assetlinks.json` lists the release package with the release key, and the debug package with this
+machine's debug key. Verified on the API 36 emulator: `arnav-dugad.github.io: verified`.
+
+That repository is the source of truth for the website, including the `/cloakrun/` landing page. The root redirects
+there until there is more than one game.
+
+## D-035 Onboarding, age gate and diagnostics consent (2026-10-17)
+
+**Age gate.** It is neutral: three equal buttons, none preselected. Only the band (under 13, 13 to 17, 18 or older)
+is stored, on the phone. Under 13 is blocked. The band survives account deletion and the back button, so the gate
+cannot simply be retried. 13 to 17 sees a supervision note.
+
+**Consent screen.** It says who sees what in plain language. Crash reports, Analytics and Performance are off in the
+manifest and stay off unless the player opts in. Debug builds never report. Analytics never collects the
+advertising ID and has ad personalisation signals off.
+
+**Names.** A friendly generated name and avatar are prefilled, so nobody has to type before playing. Names are 2 to
+20 letters (any script), digits, spaces, dots, dashes or underscores.
+
+## D-036 The briefing ends Phase 3 (2026-10-17)
+
+Starting a match moves the lobby to `briefing`. Each player sees their role revealed and the safety rules, and
+confirms. The host sees progress and can go back to the lobby for a rematch.
+
+The head start and hunt arrive with the match engine in Phase 4. Until then the briefing says so plainly, rather
+than offering a start button that does nothing.

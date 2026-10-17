@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lobby_back">Back</string>
+
+    <!-- Host setup -->
+    <string name="host_title">Host a lobby</string>
+    <string name="host_area">Play area</string>
+    <string name="host_area_circle">Circle, %1$s across</string>
+    <string name="host_area_polygon">%1$d-corner area</string>
+    <string name="host_area_size">%1$s</string>
+    <string name="host_area_edit">Change area</string>
+    <string name="host_no_area_title">Design a play area first</string>
+    <string name="host_no_area_body">Lobbies are played inside an area you draw on the map, like a park or a campus.</string>
+    <string name="host_no_area_action">Design a play area</string>
+    <string name="host_seekers">Seekers</string>
+    <string name="host_head_start">Head start</string>
+    <string name="host_hunt">Hunt length</string>
+    <string name="host_max_players">Players</string>
+    <string name="host_minutes">%1$d min</string>
+    <string name="host_up_to">Up to %1$d</string>
+    <string name="host_create">Open lobby</string>
+    <string name="host_settings_note">You can change these in the lobby until the briefing starts.</string>
+
+    <!-- Join -->
+    <string name="join_title">Join a lobby</string>
+    <string name="join_body">Enter the six-character code from the host\'s screen, or scan their QR code.</string>
+    <string name="join_code_label">Lobby code</string>
+    <string name="join_code_cd">Lobby code, %1$d of 6 characters entered</string>
+    <string name="join_action">Join</string>
+    <string name="join_scan">Scan QR code</string>
+    <string name="join_bad_qr">That QR code is not a CloakRun invite.</string>
+    <string name="join_scanner_unavailable">The QR scanner is not available on this phone. Type the code instead.</string>
+
+    <!-- Lobby -->
+    <string name="lobby_title">Lobby</string>
+    <string name="lobby_code_cd">Lobby code %1$s</string>
+    <string name="lobby_players">Players %1$d of %2$d</string>
+    <string name="lobby_you">You</string>
+    <string name="lobby_host">Host</string>
+    <string name="lobby_ready">Ready</string>
+    <string name="lobby_not_ready">Not ready</string>
+    <string name="lobby_offline">Offline</string>
+    <string name="lobby_role_unassigned">No role yet</string>
+    <string name="lobby_role_hider">Hider</string>
+    <string name="lobby_role_seeker">Seeker</string>
+    <string name="lobby_role_spectator">Spectator</string>
+    <string name="lobby_role_change_cd">Role of %1$s: %2$s. Tap to change.</string>
+    <string name="lobby_invite">Invite</string>
+    <string name="lobby_share">Share</string>
+    <string name="lobby_copy">Copy</string>
+    <string name="lobby_copied">Code copied</string>
+    <string name="lobby_invite_title">Scan to join</string>
+    <string name="lobby_invite_body">Friends can scan this with their camera or with CloakRun. Without the app, the link shows the code and a download button.</string>
+    <string name="lobby_share_text">Join my CloakRun lobby: %1$s (code %2$s)</string>
+    <string name="lobby_qr_cd">QR code for lobby %1$s</string>
+    <string name="lobby_settings">Settings</string>
+    <plurals name="lobby_settings_summary">
+        <item quantity="one">%1$d seeker, %2$d min head start, %3$d min hunt</item>
+        <item quantity="other">%1$d seekers, %2$d min head start, %3$d min hunt</item>
+    </plurals>
+    <string name="lobby_shuffle">Shuffle</string>
+    <string name="lobby_qr">QR code</string>
+    <string name="lobby_start_briefing">Start briefing</string>
+    <string name="lobby_im_ready">I\'m ready</string>
+    <string name="lobby_not_ready_action">Not ready yet</string>
+    <string name="lobby_leave">Leave lobby</string>
+    <string name="lobby_end">End lobby</string>
+    <string name="lobby_kick">Remove %1$s</string>
+    <string name="lobby_kick_title">Remove %1$s?</string>
+    <string name="lobby_kick_body">They will not be able to rejoin this lobby.</string>
+    <string name="lobby_kick_confirm">Hold to remove</string>
+    <string name="lobby_end_title">End this lobby?</string>
+    <string name="lobby_end_body">Everyone is sent home and the code stops working.</string>
+    <string name="lobby_end_confirm">Hold to end</string>
+    <string name="lobby_waiting_host">Waiting for the host to start the briefing.</string>
+    <string name="blocker_not_enough">Waiting for at least one more player.</string>
+    <string name="blocker_roles">Give everyone a role, or shuffle roles.</string>
+    <string name="blocker_no_seeker">Someone has to seek.</string>
+    <string name="blocker_no_hider">Someone has to hide.</string>
+    <string name="blocker_not_ready">Waiting for everyone to be ready.</string>
+    <string name="lobby_joined">%1$s joined</string>
+
+    <!-- Briefing -->
+    <string name="briefing_title">Briefing</string>
+    <string name="briefing_you_are">You are a</string>
+    <string name="briefing_hider_body">Run, hide and stay unseen. Seekers only ever see a fuzzy zone around you, and it shrinks as the match goes on.</string>
+    <string name="briefing_seeker_body">Wait out the head start, then track the hiders\' fuzzy zones and get close enough to tag them.</string>
+    <string name="briefing_area">Stay inside the play area. Hatched zones are off limits.</string>
+    <string name="briefing_rules">Never trespass. Stay off roads. Stop if anything feels unsafe.</string>
+    <string name="briefing_confirm">I have read the briefing</string>
+    <string name="briefing_confirmed">Briefing confirmed</string>
+    <plurals name="briefing_progress">
+        <item quantity="one">%1$d of %2$d player briefed</item>
+        <item quantity="other">%1$d of %2$d players briefed</item>
+    </plurals>
+    <string name="briefing_all_done">Everyone is briefed. Live match play (head start and hunt) arrives in the next release.</string>
+    <string name="briefing_back">Back to lobby</string>
+
+    <!-- Endings -->
+    <string name="lobby_ended_title">This lobby has ended</string>
+    <string name="lobby_ended_body">The host closed it, or it expired.</string>
+    <string name="lobby_kicked_title">You were removed from this lobby</string>
+    <string name="lobby_kicked_body">The host removed you. You can join another lobby.</string>
+    <string name="lobby_left_title">You left the lobby</string>
+    <string name="lobby_home">Back to home</string>
+    <string name="lobby_loading">Connecting to the lobby</string>
+
+    <!-- Failures -->
+    <string name="failure_not_configured">Online play is not set up in this build.</string>
+    <string name="failure_disabled">Lobbies are paused for maintenance. Try again later.</string>
+    <string name="failure_code">No lobby with that code. Check the code with the host.</string>
+    <string name="failure_full">That lobby is full.</string>
+    <string name="failure_started">That match has already started.</string>
+    <string name="failure_expired">That lobby has expired.</string>
+    <string name="failure_kicked">The host removed you from that lobby.</string>
+    <string name="failure_offline">You seem to be offline. Check your connection and try again.</string>
+    <string name="failure_denied">That action is not allowed right now.</string>
+    <string name="failure_unknown">Something went wrong. Try again.</string>
+</resources>

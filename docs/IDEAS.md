@@ -168,3 +168,67 @@ impact Low, Med or High. Ideas move to `CHANGELOG.md` when built.
     (S, Low)
 57. **Limit haptics.** A soft tick when a drag crosses the minimum or maximum area. (S, Med)
 58. **Sky gradient.** Above the tilted horizon, a subtle sky follows the real sun altitude. (M, Med)
+
+## Batch 3 (2026-10-17, after Phase 3)
+
+### UI
+59. **Find-me buzz.** Tap a player in the lobby to make their phone buzz and flash, so people find each other at the
+    meeting point. (S, High)
+60. **Pre-game checklist chips.** Each lobby row shows battery, GPS accuracy, Bluetooth and notification status as
+    small icons, so the host sees who is really ready. (M, High)
+61. **Read the code aloud.** One button speaks the join code with the NATO alphabet ("Kilo, Seven, Quebec"). (S, Med)
+
+### Map
+62. **Gathering meter.** The lobby shows how many players are already at the play area, as distance bands only, never
+    positions. (M, High)
+63. **Meeting point pin.** The host drops a meet-up pin inside the area; the lobby shows it with a walking time. (S, High)
+64. **Briefing flyover.** During the briefing, the camera circles the area boundary and lingers on each no-go zone.
+    (M, High)
+
+### Animation
+65. **Role card flip.** The briefing role card flips like a playing card, with a holographic sheen driven by tilt. (S, Med)
+66. **Join ripple.** When someone joins, a ripple travels from the code orb to their new orbit slot. (S, Low)
+67. **Removal dissolve.** A removed player's avatar cloak-dissolves out of the orbit. (S, Low)
+
+### Gameplay
+68. **Run it back.** A rematch button keeps the area and rotates who seeks, with no re-briefing for unchanged roles.
+    (S, High)
+69. **Session balancer.** Role shuffles weigh each player's catches and escapes this session to keep teams even. (M, Med)
+70. **Late spectators.** People who join after the start enter as spectators with the ghost-eye view instead of being
+    turned away. (M, Med)
+
+### Backend
+71. **Stale lobby sweep.** On launch, the app ends or forgets any lobby of yours that has expired, so nothing lingers.
+    (S, Med)
+72. **Offline join queue.** A join that fails for lack of signal retries when the network returns, with a "waiting
+    for signal" state. (S, Med)
+73. **Rules coverage report.** CI uploads the emulator's rules coverage report so untested rule branches are visible.
+    (S, Med)
+
+### Security and anti-cheat
+74. **Code-guessing throttle.** Join-code lookups are rate limited per account with a rules-checked counter document.
+    (M, High)
+75. **Host handoff.** If the host is offline for 60 seconds, the longest-connected player can take over as host; the
+    rules check presence timestamps. (L, High)
+76. **Name filter.** An on-device, multi-language word filter for player names, on top of the character rules. (S, High)
+
+### Performance
+77. **Background listener pause.** Lobby listeners detach after two minutes in the background and reattach on
+    resume, saving reads. (S, Med)
+78. **Roster in one document.** A compact roster map inside the match document lets clients use one listener instead
+    of two. (M, Med)
+79. **QR bitmap cache.** The QR code is rendered once per code to a bitmap instead of drawing modules each frame.
+    (S, Low)
+
+### Social and retention
+80. **Crews.** A standing friends group with its own code; hosting offers to invite the whole crew in one share.
+    (M, High)
+81. **Lobby poster.** A shareable image card ("6 players, Cubbon Park, tonight") for group chats. (S, Med)
+82. **Crew streaks.** Count consecutive weeks a crew has played together. (S, Low)
+
+### Polish
+83. **Smart paste.** The join screen spots a code or invite link on the clipboard and offers "Paste K7Q2XM". (S, High)
+84. **Typing haptics.** Each code tile ticks as it fills, and a full code plays a short confirm cascade. (S, Low)
+85. **Team halo.** Once roles are assigned, each avatar gets a thin ring in its team colour. (S, Low)
+86. **Live landing page.** The website shows the latest version and its highlights from the GitHub Releases API.
+    (S, Low)

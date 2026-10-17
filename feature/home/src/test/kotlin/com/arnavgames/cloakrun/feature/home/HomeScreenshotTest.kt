@@ -21,7 +21,7 @@ class HomeScreenshotTest(private val theme: ThemePreference) {
             roborazziOptions = RoborazziOptions(compareOptions = RoborazziOptions.CompareOptions(changeThreshold = 0.02f)),
         ) {
             CloakTheme(preference = theme, reduceMotion = true) {
-                HomeScreen(onDesignArea = {}, onAbout = {})
+                HomeScreen(actions = HomeActions(), player = HomePlayer("Silent Fox 42", "screenshot"))
             }
         }
     }

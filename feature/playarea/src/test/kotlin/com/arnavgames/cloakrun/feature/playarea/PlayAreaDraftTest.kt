@@ -2,6 +2,7 @@ package com.arnavgames.cloakrun.feature.playarea
 
 import com.arnavgames.cloakrun.core.game.area.PlayArea
 import com.arnavgames.cloakrun.core.game.area.PlayAreaCheck
+import com.arnavgames.cloakrun.core.game.area.PlayAreaCodec
 import com.arnavgames.cloakrun.core.game.area.PlayAreaRules
 import com.arnavgames.cloakrun.core.game.geo.Geo
 import com.arnavgames.cloakrun.core.game.geo.GeoPoint

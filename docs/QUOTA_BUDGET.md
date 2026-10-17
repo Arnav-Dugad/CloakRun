@@ -47,7 +47,8 @@ subcollection. A Firestore listener is billed one read per changed document deli
 | Events (92 x 8) | 736 |
 | Results screen | 8 |
 | Reconnect and resume overhead (20 percent) | 248 |
-| **Total** | **about 1,490** |
+| Security Rules lookups (`get` and `exists` inside rules are billed as reads; about 20 per player per match) | 160 |
+| **Total** | **about 1,650** |
 
 ### Firestore deletes (end-of-match cleanup)
 
@@ -57,7 +58,7 @@ Events (92), players (8), match (1), join code (1): **102**.
 
 | Quota | Per match | Daily limit | Matches per day |
 | --- | --- | --- | --- |
-| Reads | 1,490 | 50,000 | **33** (binding) |
+| Reads | 1,650 | 50,000 | **30** (binding) |
 | Writes | 155 | 20,000 | 129 |
 | Deletes | 102 | 20,000 | 196 |
 

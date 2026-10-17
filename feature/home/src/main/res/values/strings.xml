@@ -2,10 +2,16 @@
 <resources>
     <string name="home_tagline">Premium real-world hide and seek</string>
     <string name="home_design_area">Design a play area</string>
-    <string name="home_design_area_body">Draw a circle or polygon over a park, campus or neighbourhood. You will host lobbies on it.</string>
+    <string name="home_design_area_body">Draw a circle or polygon, or snap to a park. You host lobbies on it.</string>
     <string name="home_about">About CloakRun</string>
     <string name="home_safety_title">Play safe</string>
     <string name="home_safety_body">Stay off roads, never trespass, avoid isolated places and play in groups. Daytime is best.</string>
     <string name="home_made_by">Made by Arnav Games</string>
     <string name="home_cd_emblem">CloakRun emblem</string>
+    <string name="home_play_title">Play with friends</string>
+    <string name="home_play_body">Host a private lobby on your play area, or join one with the host\'s code or QR.</string>
+    <string name="home_host">Host a lobby</string>
+    <string name="home_join">Join with a code</string>
+    <string name="home_return_to_lobby">Return to your lobby</string>
+    <string name="home_profile_cd">Profile, %1$s</string>
 </resources>

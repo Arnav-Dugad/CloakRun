@@ -18,4 +18,5 @@ dependencies {
     api(libs.haze.blur)
     api(libs.kotlinx.collections.immutable)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
 }
