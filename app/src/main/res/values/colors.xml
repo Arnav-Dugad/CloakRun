@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window-level colours only. Compose UI reads tokens from core:designsystem. -->
+    <color name="splash_background">#FF0E0A2B</color>
+    <color name="window_background">#FF0E0A2B</color>
+</resources>
