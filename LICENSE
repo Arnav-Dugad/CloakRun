@@ -1,0 +1,12 @@
+Copyright (c) 2026 Arnav Games. All rights reserved.
+
+This repository and everything in it (source code, artwork, brand assets, sound,
+documentation and builds) are the proprietary property of Arnav Games.
+
+The source is published for transparency and so that builds can be downloaded from
+the Releases page. No licence is granted to copy, modify, distribute, sublicense or
+create derivative works from any part of this repository without prior written
+permission from Arnav Games.
+
+Third-party components bundled in builds remain under their own licences, which are
+listed in the app (Settings > About > Open-source notices) and in docs/THIRD_PARTY.md.

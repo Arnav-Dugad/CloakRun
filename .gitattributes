@@ -1,0 +1,14 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.jar binary
+*.png binary
+*.webp binary
+*.jpg binary
+*.ttf binary
+*.otf binary
+*.keystore binary
+*.jks binary
+*.gif binary
+*.mp4 binary
+*.pmtiles binary

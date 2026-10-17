@@ -1,0 +1,49 @@
+# Gradle / build
+.gradle/
+build/
+!src/**/build/
+.kotlin/
+captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+output-metadata.json
+
+# Local config
+local.properties
+keystore.properties
+*.env
+.env*
+
+# Secrets: never commit
+*.jks
+*.keystore
+*.p12
+*.pem
+google-services.json
+**/google-services.json
+!**/google-services.json.example
+service-account*.json
+*-service-account.json
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Node / Firebase
+node_modules/
+firebase-debug.log
+firebase-debug.*.log
+database-debug.log
+firestore-debug.log
+ui-debug.log
+pubsub-debug.log
+.firebase/
+.firebaserc.local
+
+# Screenshot test outputs (goldens live in src/test/screenshots)
+**/build/outputs/roborazzi/
