@@ -228,3 +228,54 @@ The sideload flavour updates itself from GitHub Releases. The play flavour has n
 The release workflow extracted the changelog section with an awk regular expression whose escapes were lost, so
 v0.1.0 to v0.3.0 shipped notes without their changelog. It now matches the heading as a literal string, and the three
 existing releases were re-published with full notes. The updater shows these notes in its sheet.
+
+## D-029 Safety cutouts and what counts as restricted land (2026-10-17)
+
+The safety pass treats five kinds of place inside a play area as no-go zones. All of them come from the rendered
+OpenMapTiles features in the viewport, simplified to 1.5 m:
+
+- **Water:** the `water` layer.
+- **Major roads:** motorway, trunk and primary roads, buffered by 18, 14 and 10 m.
+- **Rail:** rail and transit lines, buffered by 8 m.
+- **Buildings:** never part of the game.
+- **Restricted land:** the OpenMapTiles schema has no `access` tags for areas, so private land is approximated by
+  land-use classes that are rarely public: military, industrial, quarry, railway, garages, dam, school and
+  kindergarten. This is deliberately conservative. A playground or park is never excluded, and a school ground is
+  excluded even if it is open after hours.
+
+No-go zones are hatched on the map and summarised with a coverage percentage. An area that is more than 40 percent
+no-go cannot be saved. The query needs zoom 15 or closer (buildings render from zoom 13 and footpaths from 14), so
+"Check safety" frames the area top-down at zoom 15 or closer before querying. Hazards are recomputed on each device
+and are not uploaded with the area.
+
+## D-030 Park snap by rasterisation (2026-10-17)
+
+Vector tiles clip features at tile edges, so a park arrives as several pieces. Rather than a fragile polygon union,
+`ParkSnap` works on a local grid (cell size at least 3 m, at most 420 cells per side):
+
+1. Rasterise the pieces.
+2. Block water, major roads and rail first, so a road through a park splits it.
+3. Flood-fill from the tap.
+4. Fill holes (ponds and buildings become no-go zones, not holes).
+5. Close diagonal saddles.
+6. Trace the outer boundary along cell edges.
+7. Simplify with Douglas-Peucker, raising the tolerance until the outline has at most 24 corners and no crossing
+   edges.
+
+This is deterministic and unit tested with tile-split, road-split, pond, serrated and too-small cases.
+
+## D-031 Route plausibility (2026-10-17)
+
+An on-device check of a trail flags these, and only fixes with accuracy of 25 m or better are judged:
+
+| Flag | Rule | Penalty |
+| --- | --- | --- |
+| Mock location | Any fix from a mock provider | 60 |
+| Teleport | More than 120 m beyond GPS error within 5 s | 35 |
+| Impossible speed | Over 14 m/s, or over 8.5 m/s for 3 segments | 20 |
+| Through buildings | A straight run of 25 m or more through a footprint | 15 |
+| Off network | More than 45 m plus accuracy from any street or path for 60 s | 10 |
+
+The score starts at 100. 85 or more is Clean, 50 or more is Suspicious, and anything lower is Likely spoofed. In
+line with the brief, results are flagged to the host and never auto-banned. It complements the Bluetooth proximity
+proof planned for tags in Phase 4.

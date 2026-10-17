@@ -138,6 +138,37 @@
    }
   },
   {
+   "id": "landuse-restricted",
+   "type": "fill",
+   "source": "openmaptiles",
+   "source-layer": "landuse",
+   "minzoom": 12,
+   "filter": [
+    "in",
+    [
+     "get",
+     "class"
+    ],
+    [
+     "literal",
+     [
+      "military",
+      "industrial",
+      "quarry",
+      "railway",
+      "garages",
+      "dam",
+      "school",
+      "kindergarten"
+     ]
+    ]
+   ],
+   "paint": {
+    "fill-color": "#2A1430",
+    "fill-opacity": 0.55
+   }
+  },
+  {
    "id": "water",
    "type": "fill",
    "source": "openmaptiles",

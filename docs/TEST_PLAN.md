@@ -70,3 +70,16 @@ You need v0.4.0 installed from the Releases page. The next release will exercise
 6. In About > Updates, turn off "Download updates on Wi-Fi automatically", then tap Check now. It finds the update
    but waits for you.
 7. Airplane mode, then Check now: a clear "Could not reach GitHub" message, and nothing crashes.
+
+## v0.5.0 safety: park snap and cutouts
+
+1. In the designer, choose **Park** and tap inside a park you know. The outline snaps to the park's edge within a
+   second and the panel folds away. Check the outline matches reality.
+2. Tap a park that has a busy road through it. The area stops at the road ("stopping at a main road").
+3. Expand the panel. Safety cutouts lists what was excluded. Ponds, buildings and any road inside are hatched or
+   tinted on the map.
+4. Draw a circle over an industrial estate or a rail yard. The warning says it is mostly off limits and Save is
+   disabled.
+5. Drag the map so only half the area is visible. The panel offers **Check safety**. Tap it: the map frames the
+   whole area from above and the summary updates.
+6. Tap somewhere that is not green in Park mode. The message is "No park or green space there".

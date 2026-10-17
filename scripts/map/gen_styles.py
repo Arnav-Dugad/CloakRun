@@ -38,6 +38,7 @@ NIGHT = {
     "park": "#0F2A27",
     "park_edge": "#3DF5B0",
     "pitch": "#122E2A",
+    "restricted": "#2A1430",
     "water": "#0A1433",
     "water_edge": "#5CF2FF",
     "waterway": "#1B3A6B",
@@ -73,6 +74,7 @@ DAY = {
     "park": "#D2EDDB",
     "park_edge": "#41B98A",
     "pitch": "#CBE8D6",
+    "restricted": "#E9DCE6",
     "water": "#B7D4F2",
     "water_edge": "#6FA9DE",
     "waterway": "#9CC3EC",
@@ -102,6 +104,9 @@ DAY = {
 }
 
 NOT_TUNNEL = ["!=", ["get", "brunnel"], "tunnel"]
+
+# OpenMapTiles landuse classes treated as not publicly accessible (see DECISIONS D-029).
+RESTRICTED_LANDUSE = ["military", "industrial", "quarry", "railway", "garages", "dam", "school", "kindergarten"]
 
 
 def zoom_width(*stops: float) -> list:
@@ -188,6 +193,12 @@ def build(name: str, p: dict) -> dict:
             "id": "landuse-leisure", "type": "fill", "source": SOURCE, "source-layer": "landuse", "minzoom": 12,
             "filter": ["in", ["get", "class"], ["literal", ["pitch", "playground", "stadium", "track", "cemetery", "garden"]]],
             "paint": {"fill-color": p["pitch"]},
+        },
+        {
+            # Land that is rarely public. Rendered faintly so the safety pass can query it.
+            "id": "landuse-restricted", "type": "fill", "source": SOURCE, "source-layer": "landuse", "minzoom": 12,
+            "filter": ["in", ["get", "class"], ["literal", RESTRICTED_LANDUSE]],
+            "paint": {"fill-color": p["restricted"], "fill-opacity": 0.55},
         },
         {
             "id": "water", "type": "fill", "source": SOURCE, "source-layer": "water",

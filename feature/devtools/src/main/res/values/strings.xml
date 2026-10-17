@@ -68,6 +68,8 @@
     <string name="sim_spawn">Spawn bots</string>
     <string name="sim_walk_me">Walk me</string>
     <string name="sim_clear">Clear</string>
+    <string name="sim_spoof">Spoof jump</string>
+    <string name="sim_integrity">integrity %1$d %2$s</string>
     <string name="sim_tracking">Match service</string>
     <string name="sim_speed_1">1x</string>
     <string name="sim_speed_4">4x</string>

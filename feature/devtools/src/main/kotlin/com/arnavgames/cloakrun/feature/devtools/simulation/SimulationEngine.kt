@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.arnavgames.cloakrun.core.game.area.PlayArea
+import com.arnavgames.cloakrun.core.game.geo.Geo
 import com.arnavgames.cloakrun.core.game.geo.GeoPoint
 import com.arnavgames.cloakrun.core.game.location.FixSource
 import com.arnavgames.cloakrun.core.game.location.LocationFix
@@ -42,7 +43,8 @@ class SimulationEngine(private val repository: LocationRepository) {
     )
 
     private val random = Random(SEED)
-    private var graph: RoadGraph? = null
+    var graph: RoadGraph? = null
+        private set
     private var botList: List<Bot> = emptyList()
     private var me: BotWalker? = null
 
@@ -105,6 +107,18 @@ class SimulationEngine(private val repository: LocationRepository) {
         }
     }
 
+    /**
+     * Debug-only cheat: jumps the simulated you to a junction at least [SPOOF_JUMP_M] away, so the
+     * route plausibility check can be seen flagging a teleport.
+     */
+    fun teleportMe() {
+        val g = graph ?: return
+        val here = me?.position ?: return
+        val far = g.largestComponent().filter { Geo.distance(g.nodes[it], here) >= SPOOF_JUMP_M }
+        if (far.isEmpty()) return
+        me = BotWalker(g, Random(random.nextInt()), far.random(random), baseSpeedMps = 1.4)
+    }
+
     /** Advances the simulation by [realSeconds] of wall time, scaled by the current speed. */
     fun tick(realSeconds: Double) {
         if (!isActive) return
@@ -144,6 +158,7 @@ class SimulationEngine(private val repository: LocationRepository) {
         const val MIN_NODES = 8
         const val SIMULATED_ACCURACY_M = 6f
         const val MIN_FIX_INTERVAL_MS = 200L
+        const val SPOOF_JUMP_M = 300.0
         val NAMES = listOf("Nova", "Ash", "Kiran", "Mira", "Zed", "Juno", "Rio", "Tara")
     }
 }
