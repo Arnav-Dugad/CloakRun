@@ -18,6 +18,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.arnavgames.cloakrun.AppUpdates
 import com.arnavgames.cloakrun.about.AboutScreen
 import com.arnavgames.cloakrun.core.designsystem.theme.CloakTheme
 import com.arnavgames.cloakrun.feature.home.HomeScreen
@@ -38,7 +39,11 @@ data object AboutKey : NavKey
  * are springs, and predictive back shows a scaled preview of the screen underneath.
  */
 @Composable
-fun CloakRunNavigation(versionName: String, modifier: Modifier = Modifier) {
+fun CloakRunNavigation(
+    versionName: String,
+    onOpenUpdates: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val backStack = rememberNavBackStack(HomeKey)
     val reduced = CloakTheme.motion.reduced
     NavDisplay(
@@ -54,10 +59,16 @@ fun CloakRunNavigation(versionName: String, modifier: Modifier = Modifier) {
         predictivePopTransitionSpec = { backward(reduced) },
         entryProvider = entryProvider {
             entry<HomeKey> {
-                HomeScreen(onDesignArea = { backStack.add(PlayAreaKey) }, onAbout = { backStack.add(AboutKey) })
+                HomeScreen(
+                    onDesignArea = { backStack.add(PlayAreaKey) },
+                    onAbout = { backStack.add(AboutKey) },
+                    banner = { AppUpdates.HomeBanner(onOpenUpdates, Modifier) },
+                )
             }
             entry<PlayAreaKey> { PlayAreaRoute(onBack = { backStack.removeLastOrNull() }) }
-            entry<AboutKey> { AboutScreen(versionName = versionName) }
+            entry<AboutKey> {
+                AboutScreen(versionName = versionName, updatesCard = { AppUpdates.AboutCard(onOpenUpdates, Modifier) })
+            }
         },
     )
 }

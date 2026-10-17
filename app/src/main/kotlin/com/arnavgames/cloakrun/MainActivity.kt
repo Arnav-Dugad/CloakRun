@@ -15,6 +15,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -51,11 +54,14 @@ class MainActivity : ComponentActivity() {
                 CompositionLocalProvider(LocalMapOverlayContributors provides overlays) {
                     val sharing by trackingController.isTracking.collectAsStateWithLifecycle()
                     val inset by animateDpAsState(if (sharing) SHARING_INSET else 0.dp, label = "chromeInset")
+                    var updateSheet by rememberSaveable { mutableStateOf(false) }
+                    AppUpdates.LaunchCheck()
                     Box(Modifier.fillMaxSize()) {
                         CompositionLocalProvider(LocalTopChromeInset provides inset) {
-                            CloakRunNavigation(versionName = BuildConfig.VERSION_NAME)
+                            CloakRunNavigation(versionName = BuildConfig.VERSION_NAME, onOpenUpdates = { updateSheet = true })
                         }
                         LocationSharingIndicator(sharing, Modifier.align(Alignment.TopCenter))
+                        AppUpdates.SheetHost(visible = updateSheet, onDismiss = { updateSheet = false })
                     }
                 }
             }

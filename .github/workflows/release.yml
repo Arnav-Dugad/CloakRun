@@ -81,9 +81,9 @@ jobs:
           v="${{ steps.version.outputs.name }}"
           prev="$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)"
           {
-            awk -v ver="$v" '
-              $0 ~ "^## \[" ver "\]" { flag = 1; next }
-              /^## \[/ { flag = 0 }
+            awk -v head="## [$v]" '
+              index($0, head) == 1 { flag = 1; next }
+              index($0, "## [") == 1 { flag = 0 }
               flag
             ' CHANGELOG.md
             echo

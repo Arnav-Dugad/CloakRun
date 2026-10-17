@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_download_title">CloakRun %1$s</string>
+    <string name="update_banner_available">Update available: v%1$s</string>
+    <string name="update_banner_size">%1$s download</string>
+    <string name="update_banner_downloading">Downloading v%1$s</string>
+    <string name="update_banner_ready">v%1$s is ready</string>
+    <string name="update_view">View</string>
+    <string name="update_restart">Restart to update</string>
+    <string name="update_sheet_title">CloakRun v%1$s</string>
+    <string name="update_sheet_subtitle">Published %1$s, %2$s</string>
+    <string name="update_whats_new">What is new</string>
+    <string name="update_now">Update now</string>
+    <string name="update_later">Later</string>
+    <string name="update_install">Install</string>
+    <string name="update_retry">Try again</string>
+    <string name="update_allow">Allow installs</string>
+    <string name="update_progress_bytes">%1$s of %2$s</string>
+    <string name="update_stage_downloading">Downloading</string>
+    <string name="update_stage_verifying">Checking the checksum and signature</string>
+    <string name="update_stage_ready">Verified. Ready to install.</string>
+    <string name="update_stage_installing">Installing</string>
+    <string name="update_permission_body">Android needs your permission for CloakRun to install its own updates. Tap Allow installs, switch it on, then come back.</string>
+    <string name="update_failed_network">Could not reach GitHub. Check your connection and try again.</string>
+    <string name="update_failed_download">The download did not finish. Try again.</string>
+    <string name="update_failed_checksum">The downloaded file did not match its published checksum, so it was deleted and not installed.</string>
+    <string name="update_failed_signature">The download was not signed by Arnav Games, so it was deleted and not installed.</string>
+    <string name="update_failed_install">Android did not finish the install. Try again.</string>
+    <string name="update_card_title">Updates</string>
+    <string name="update_card_current">You have v%1$s</string>
+    <string name="update_card_checking">Checking for updates</string>
+    <string name="update_card_up_to_date">You are on the latest version</string>
+    <string name="update_card_check">Check now</string>
+    <string name="update_card_auto">Download updates on Wi-Fi automatically</string>
+    <string name="update_card_disabled">Debug builds do not update from GitHub.</string>
+    <string name="update_progress_cd">Update progress: %1$d%%</string>
+    <string name="update_close">Close</string>
+</resources>

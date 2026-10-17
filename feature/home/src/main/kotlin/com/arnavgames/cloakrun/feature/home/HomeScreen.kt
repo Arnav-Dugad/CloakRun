@@ -53,6 +53,7 @@ fun HomeScreen(
     onDesignArea: () -> Unit,
     onAbout: () -> Unit,
     modifier: Modifier = Modifier,
+    banner: @Composable () -> Unit = {},
 ) {
     val spacing = CloakTheme.spacing
     val colors = CloakTheme.colors
@@ -76,7 +77,9 @@ fun HomeScreen(
                 color = colors.textSecondary,
                 textAlign = TextAlign.Center,
             )
-            Spacer(Modifier.height(spacing.huge))
+            Spacer(Modifier.height(spacing.xl))
+            banner()
+            Spacer(Modifier.height(spacing.l))
             GlassCard(Modifier.fillMaxWidth()) {
                 CloakIcon(CloakIcons.Zone, contentDescription = null, tint = colors.accent, size = 32.dp)
                 Text(

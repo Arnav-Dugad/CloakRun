@@ -5,6 +5,22 @@ All notable changes to CloakRun are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- In-app updates (sideload builds):
+  - CloakRun checks GitHub Releases at launch and downloads new versions automatically on Wi-Fi, with a progress bar
+    on Home and a progress ring in the update sheet.
+  - Every download is verified against the published SHA-256 checksum, GitHub's own digest and the Arnav Games
+    signing certificate before it is installed.
+  - The sheet shows what is new, the size and each stage (downloading, verifying, installing), and walks you
+    through allowing installs the first time.
+  - After the first in-app update, Android 12 and newer can update CloakRun without asking again.
+- About screen: an Updates card with the current version, Check now, and the auto-download switch.
+
+### Fixed
+
+- Release notes on GitHub now include the changelog section; v0.1.0 to v0.3.0 were corrected.
+
 ## [0.3.0] - 2026-10-17
 
 ### Added

@@ -1,0 +1,31 @@
+{
+ "tag_name": "v0.3.0",
+ "name": "CloakRun v0.3.0",
+ "draft": false,
+ "prerelease": false,
+ "published_at": "2026-10-17T13:06:39Z",
+ "body": "\n### Added\n\n- Map (Phase 2). Custom CloakRun Night and Day styles on OpenFreeMap vector tiles:\n  - near-black land, luminous violet and cyan roads with glow, softly lit parks and water\n  - emphasised footpaths\n  - 3D buildings that rise with zoom and brighten with height\n  The style switches automatically at local sunset and sunrise, with a crossfade between styles.\n- Cinematic fly-in to your position: the camera swoops down and tilts as the buildings rise.\n- Play-area designer:\n  - draw a circle (tap to place it, slider to size it) or a polygon (tap to add corners, drag to move them)\n  - a live area readout in square metres, hectares or square kilometres, with validation against size limits and\n    crossing edges\n  - an animated glowing energy-line border, with the outside world dimmed\n  - areas are saved on the device only\n- Location service:\n  - one shared, adaptive location stream that samples fast near opponents, slow when idle, and frugally on low\n    battery or battery saver\n  - mock-location flagging\n  - a match foreground service with a persistent notification and a Stop action\n  - an app-wide \"Sharing your fuzzy zone\" indicator\n- Local geofencing for play-area enter, exit and near-edge, with GPS-jitter hysteresis.\n- Home screen and Navigation 3 app shell with spring transitions and a predictive-back preview.\n- Simulation Mode (debug builds only):\n  - bots that walk the real street and path network of the visible map, drawn as seeker heading cones and hider\n    glass beads with name tags\n  - \"Walk me\" to simulate your own movement\n  - 1x, 4x and 10x speed\n  - a toggle for the match service\n  - a debug HUD with frame rate, fix accuracy, source and mock flag\n- Pure Kotlin game engine foundations: geodesy, play-area geometry, sunrise and sunset, a road graph, bot walkers and a\n  fast-forwardable game clock, all unit tested.\n\n### Fixed\n\n- The wordmark is now legible on light themes (single-colour variant).\n\n### Commits\n- feat: phase 2 map, location, play areas and Simulation Mode (#4) (3e3d824)\n\n### Verify your download\n\n```\n2b022fe5de960f3fc775911d85bc0d7abc33b4a62597fcb8ef40dd562a4de456  CloakRun-v0.3.0.apk\n6a6656fb71c6b66cc80b73cca5097ba569c26dbc44977af718501700f7271792  CloakRun-v0.3.0.aab\n```\n\nMade by Arnav Games.\n",
+ "assets": [
+  {
+   "name": "CloakRun-v0.3.0-SHA256SUMS.txt",
+   "size": 172,
+   "browser_download_url": "https://github.com/Arnav-Dugad/CloakRun/releases/download/v0.3.0/CloakRun-v0.3.0-SHA256SUMS.txt",
+   "digest": "sha256:375886d94d0a7f70034046dcff41a3fa4c0be72b4284c75d5e5fd71e523b3bb0",
+   "content_type": "text/plain"
+  },
+  {
+   "name": "CloakRun-v0.3.0.aab",
+   "size": 19747665,
+   "browser_download_url": "https://github.com/Arnav-Dugad/CloakRun/releases/download/v0.3.0/CloakRun-v0.3.0.aab",
+   "digest": "sha256:6a6656fb71c6b66cc80b73cca5097ba569c26dbc44977af718501700f7271792",
+   "content_type": "application/x-authorware-bin"
+  },
+  {
+   "name": "CloakRun-v0.3.0.apk",
+   "size": 44088368,
+   "browser_download_url": "https://github.com/Arnav-Dugad/CloakRun/releases/download/v0.3.0/CloakRun-v0.3.0.apk",
+   "digest": "sha256:2b022fe5de960f3fc775911d85bc0d7abc33b4a62597fcb8ef40dd562a4de456",
+   "content_type": "application/vnd.android.package-archive"
+  }
+ ]
+}

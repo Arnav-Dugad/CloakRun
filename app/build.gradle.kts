@@ -99,6 +99,7 @@ dependencies {
     implementation(projects.feature.home)
     implementation(projects.feature.playarea)
     debugImplementation(projects.feature.devtools)
+    "sideloadImplementation"(projects.feature.update)
 
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)

@@ -55,3 +55,18 @@ Debug builds only:
 2. Turn on **Walk me**. Your dot starts moving by itself.
 3. Turn on **Match service**. A notification appears, with the CloakRun glyph in the status bar and a Stop action,
    and the "Sharing your fuzzy zone" pill appears at the top of the app. Turn it off and both disappear.
+
+## v0.4.0: in-app updates
+
+You need v0.4.0 installed from the Releases page. The next release will exercise the updater.
+
+1. When a newer release exists, open CloakRun on Wi-Fi. Home shows "Downloading vX" with a moving progress bar.
+2. Tap View. The sheet shows what is new, the size, and a progress ring counting up with megabytes downloaded.
+3. When it says "Verified. Ready to install", tap Install. The first time, Android asks you to allow installs from
+   CloakRun: tap Allow installs, switch it on, go back, and the install continues by itself.
+4. Confirm Android's "Do you want to update this app?" prompt. CloakRun restarts on the new version (check
+   About > Updates).
+5. On mobile data, nothing downloads by itself. The banner says an update is available and Update now starts it.
+6. In About > Updates, turn off "Download updates on Wi-Fi automatically", then tap Check now. It finds the update
+   but waits for you.
+7. Airplane mode, then Check now: a clear "Could not reach GitHub" message, and nothing crashes.
