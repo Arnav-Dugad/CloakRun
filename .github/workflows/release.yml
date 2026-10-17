@@ -69,7 +69,10 @@ jobs:
           cp app/build/outputs/apk/sideload/release/app-sideload-release.apk "dist/CloakRun-$v.apk"
           cp app/build/outputs/bundle/playRelease/app-play-release.aab "dist/CloakRun-$v.aab"
           # Fail if the APK is not signed with the release certificate.
-          "$ANDROID_HOME"/build-tools/*/apksigner verify --print-certs "dist/CloakRun-$v.apk" | grep -q "CN=Arnav Games"
+          apksigner="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -n 1)/apksigner"
+          "$apksigner" verify --print-certs "dist/CloakRun-$v.apk" | tee dist/signature.txt | grep -q "CN=Arnav Games"
+          grep -i "SHA-256 digest" dist/signature.txt
+          rm dist/signature.txt
           (cd dist && sha256sum "CloakRun-$v.apk" "CloakRun-$v.aab" > "CloakRun-$v-SHA256SUMS.txt")
           cat dist/*SHA256SUMS.txt
 
