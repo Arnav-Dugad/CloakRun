@@ -38,7 +38,7 @@ espresso = "3.7.0"
 
 # Kotlinx
 coroutines = "1.11.0"
-serialization = "1.11.0"
+serialization = "1.12.0"
 datetime = "0.8.0"
 immutable = "0.5.2"
 
